@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "storefrontend"
+version = "0.1.0"
+description = ""
+authors = ["Enmin Zhang <zhangenmin888@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.95.0"
+httpx = "^0.23.3"
+uvicorn = "^0.21.1"
+ujson = "^5.7.0"
+Babel = "^2.12.1"
+starlette-context = "^0.3.6"
+tortoise-orm = "^0.19.3"
+asyncpg = "^0.27.0"
+aerich = "^0.7.1"
+pre-commit = "^3.2.0"
+redis = "^4.5.1"
+pydantic = "^1.10.6"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.dev-dependencies]
+
+
+[tool.aerich]
+tortoise_orm = "config.db.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
