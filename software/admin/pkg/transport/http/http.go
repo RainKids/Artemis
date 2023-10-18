@@ -23,9 +23,10 @@ import (
 )
 
 type Options struct {
-	Host string
-	Port int
-	Mode string
+	Port       int
+	Host       string
+	Mode       string
+	ServerName string
 }
 
 type Server struct {
@@ -71,7 +72,7 @@ func NewRouter(o *Options, logger *zap.Logger, init InitControllers, tracer *tra
 	r.Use(ginzap.RecoveryWithZap(logger, true))
 	// 添加prometheus 监控
 	r.Use(ginprometheus.New(r).Middleware())
-	r.Use(otelgin.Middleware("api-gateway-server", otelgin.WithTracerProvider(tracer)))
+	r.Use(otelgin.Middleware(fmt.Sprintf("%s:%s:%d", o.ServerName, o.Host, o.Port), otelgin.WithTracerProvider(tracer)))
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 	pprof.Register(r)
 	init(r)
