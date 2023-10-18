@@ -11,12 +11,6 @@ import (
 	"time"
 )
 
-type Response struct {
-	Code int         `json:"code"`
-	Msg  interface{} `json:"msg"`
-	Data interface{} `json:"data"`
-}
-
 var res response.Data
 
 type responseBodyWriter struct {
