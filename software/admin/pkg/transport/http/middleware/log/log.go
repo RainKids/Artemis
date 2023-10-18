@@ -1,7 +1,7 @@
 package log
 
 import (
-	"admin/transport/http/response"
+	"admin/pkg/transport/http/response"
 	"bytes"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
