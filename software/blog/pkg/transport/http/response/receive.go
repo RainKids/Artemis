@@ -1,7 +1,7 @@
 package response
 
 import (
-	"admin/pkg/exception"
+	"blog/pkg/exception"
 	"encoding/json"
 	"github.com/pkg/errors"
 	"io"

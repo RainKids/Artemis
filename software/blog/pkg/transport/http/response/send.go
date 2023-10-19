@@ -1,7 +1,7 @@
 package response
 
 import (
-	"admin/pkg/exception"
+	"blog/pkg/exception"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

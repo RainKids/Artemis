@@ -1,10 +1,10 @@
 package http
 
 import (
-	"admin/pkg/tools/network"
-	"admin/pkg/transport/http/middleware/log"
-	"admin/pkg/transport/http/middleware/metric/prometheus"
-	"admin/pkg/transport/http/middleware/validator"
+	"blog/pkg/tools/network"
+	"blog/pkg/transport/http/middleware/log"
+	"blog/pkg/transport/http/middleware/metric/prometheus"
+	"blog/pkg/transport/http/middleware/validator"
 	"context"
 	"fmt"
 	"github.com/gin-contrib/cors"

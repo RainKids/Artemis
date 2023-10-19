@@ -1,7 +1,7 @@
 package timeparse
 
 import (
-	"admin/global"
+	"blog/global"
 	"bytes"
 	"context"
 	"database/sql/driver"

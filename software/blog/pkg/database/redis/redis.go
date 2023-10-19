@@ -15,7 +15,7 @@ import (
 
 // / ClientType 定义redis client 结构体
 type RedisDB struct {
-	Client redis.UniversalClient
+	*redis.Client
 }
 
 // Client  redis连接类型
@@ -23,12 +23,12 @@ var RedisClient RedisDB
 
 // Options redis option
 type Options struct {
-	URL         []string // host:port
-	MaxIdle     int      // 最大空闲连接数
-	MaxActive   int      // 最大连接数
-	IdleTimeout int      // 空闲连接超时时间
-	Timeout     int      // 操作超时时间
-	Network     string   // tcp or udp
+	URL         string // host:port
+	MaxIdle     int    // 最大空闲连接数
+	MaxActive   int    // 最大连接数
+	IdleTimeout int    // 空闲连接超时时间
+	Timeout     int    // 操作超时时间
+	Network     string // tcp or udp
 	Password    string
 }
 
@@ -48,8 +48,8 @@ func NewOptions(v *viper.Viper, logger *zap.Logger) (*Options, error) {
 
 // New redis pool conn
 func New(o *Options) (*RedisDB, error) {
-	rdb := redis.NewUniversalClient(&redis.UniversalOptions{
-		Addrs:        o.URL,
+	rdb := redis.NewClient(&redis.Options{
+		Addr:         o.URL,
 		Password:     o.Password, // no password set
 		DB:           0,          // use default DB
 		MaxIdleConns: o.MaxIdle,

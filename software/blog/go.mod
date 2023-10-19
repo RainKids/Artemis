@@ -1,6 +1,6 @@
 module blog
 
-go 1.21.0
+go 1.21.3
 
 require (
 	github.com/alibaba/sentinel-golang v1.0.4
@@ -14,6 +14,7 @@ require (
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/go-playground/validator/v10 v10.15.3
+	github.com/gochore/dcron v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190118093823-f849b5445de4
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
@@ -97,6 +98,7 @@ require (
 	github.com/prometheus/common v0.42.0 // indirect
 	github.com/prometheus/procfs v0.10.1 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/sagikazarmark/locafero v0.3.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.21.6 // indirect
