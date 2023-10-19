@@ -12,12 +12,12 @@ import (
 )
 
 // ClientType 定义日志 client 结构体
-type ClientType struct {
-	Logger *zap.Logger
+type Client struct {
+	*zap.Logger
 }
 
 // Client  logger连接类型
-var Client ClientType
+var Logger Client
 
 // Options log option
 type Options struct {
@@ -81,7 +81,7 @@ func New(o *Options) (*zap.Logger, error) {
 	l = zap.New(core, zap.AddCaller())
 	zap.ReplaceGlobals(l)
 	logger := otelzap.New(l)
-	Client.Logger = logger.Logger
+	Logger.Logger = logger.Logger
 	return logger.Logger, err
 }
 
