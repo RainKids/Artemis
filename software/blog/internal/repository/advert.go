@@ -1,7 +1,7 @@
-package data
+package repository
 
 import (
-	"blog/internal/domain/po"
+	"blog/internal/biz/po"
 	"blog/pkg/database"
 	"blog/pkg/database/postgres"
 	"blog/pkg/database/redis"
