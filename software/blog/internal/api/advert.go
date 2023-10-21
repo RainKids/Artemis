@@ -1,18 +1,16 @@
 package api
 
-import (
-	"blog/internal/service"
-	"go.uber.org/zap"
-)
+import "github.com/gin-gonic/gin"
 
-type AdvertController struct {
-	logger        *zap.Logger
-	advertService service.AdvertService
+func init() {
+	routerAuth = append(routerAuth, registerAuthAdvertRouter)
+	routerNoAuth = append(routerNoAuth, registerNoAuthAdvertRouter)
 }
 
-func NewAdvertController(logger *zap.Logger, advertService service.AdvertService) *AdvertController {
-	return &AdvertController{
-		logger:        logger.With(zap.String("type", "AdvertController")),
-		advertService: advertService,
-	}
+func registerAuthAdvertRouter(v1 *gin.RouterGroup, pc *Controller) {
+
+}
+
+func registerNoAuthAdvertRouter(v1 *gin.RouterGroup, pc *Controller) {
+
 }

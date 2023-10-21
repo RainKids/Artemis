@@ -3,25 +3,17 @@ package api
 import (
 	"blog/internal/biz/po"
 	"blog/pkg/captcha"
-	"blog/pkg/database/redis"
 	"blog/pkg/transport/http/response"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
-type CaptchaController struct {
-	logger *zap.Logger
-	rdb    *redis.RedisDB
+func init() {
+	routerAuth = append(routerAuth, registerAuthCaptchaRouter)
+	routerNoAuth = append(routerNoAuth, registerNoAuthCaptchaRouter)
 }
 
-func NewCaptchaController(logger *zap.Logger, rdb *redis.RedisDB) *CaptchaController {
-	return &CaptchaController{
-		logger: logger.With(zap.String("type", "AdvertController")),
-		rdb:    rdb,
-	}
-}
-
-func (c *CaptchaController) Captcha(ctx *gin.Context) {
+func (c *Controller) Captcha(ctx *gin.Context) {
 	// dirver := base64Captcha.NewDriverDigit(global.CaptchaImgHeight, global.CaptchaImgWidth, global.CaptchaKeyLong, 0.7, 80)
 	// cp := base64Captcha.NewCaptcha(dirver, store.UseWithCtx(c))
 	if id, b64s, err := captcha.DriverDigitFunc(); err != nil {
@@ -36,4 +28,16 @@ func (c *CaptchaController) Captcha(ctx *gin.Context) {
 		})
 		return
 	}
+}
+
+func registerAuthCaptchaRouter(v1 *gin.RouterGroup, pc *Controller) {
+
+}
+
+func registerNoAuthCaptchaRouter(v1 *gin.RouterGroup, pc *Controller) {
+	r := v1.Group("/captcha")
+	{
+		r.GET("", pc.Captcha)
+	}
+
 }

@@ -10,7 +10,7 @@ type advertService struct {
 	advertRepository repository.AdvertRepository
 }
 
-func NewAdvertService(logger *zap.Logger, advertRepository repository.AdvertRepository) AdvertService {
+func newAdvertService(logger *zap.Logger, advertRepository repository.AdvertRepository) AdvertService {
 	return &advertService{
 		logger:           logger.With(zap.String("type", "AdvertService")),
 		advertRepository: advertRepository,
