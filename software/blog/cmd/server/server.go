@@ -8,7 +8,7 @@ import (
 
 var (
 	configFile string
-	app        *application.Application
+	server     *application.Application
 	err        error
 	StartCmd   = &cobra.Command{
 		Use:          "server",
@@ -26,7 +26,7 @@ var (
 )
 
 func tip() {
-	usageStr := `starting MicroCool API server`
+	usageStr := `starting Artemis blog server`
 	fmt.Printf("%s\n", usageStr)
 }
 
@@ -37,16 +37,16 @@ func init() {
 func setup() {
 	//wrappers.InitFlowQPS()
 	//wrappers.InitCircuitBreaker()
-	app, err = CreateApp(configFile)
+	server, err = CreateApp(configFile)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func run() error {
-	if err = app.Start(); err != nil {
+	if err = server.Start(); err != nil {
 		panic(err)
 	}
-	app.AwaitSignal()
+	server.AwaitSignal()
 	return err
 }

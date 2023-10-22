@@ -13,16 +13,16 @@ var (
 )
 
 type Controller struct {
-	logger        *zap.Logger
-	rdb           *redis.RedisDB
-	advertService service.AdvertService
+	logger  *zap.Logger
+	rdb     *redis.RedisDB
+	service service.Service
 }
 
-func NewController(logger *zap.Logger, rdb *redis.RedisDB, advertService service.AdvertService) *Controller {
+func NewController(logger *zap.Logger, rdb *redis.RedisDB, service service.Service) *Controller {
 	return &Controller{
-		logger:        logger.With(zap.String("type", "Controller")),
-		rdb:           rdb,
-		advertService: advertService,
+		logger:  logger.With(zap.String("type", "Controller")),
+		rdb:     rdb,
+		service: service,
 	}
 }
 

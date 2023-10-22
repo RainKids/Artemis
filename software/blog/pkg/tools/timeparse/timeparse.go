@@ -6,6 +6,7 @@ import (
 	"context"
 	"database/sql/driver"
 	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"math"
 	"strconv"
 	"strings"
@@ -284,4 +285,12 @@ func TimeStrandFormat(timeStr string) string {
 		}
 	}
 	return strings.Join(time_array, "-")
+}
+
+func GoTimeToPbTime(t xtime.Time) *timestamppb.Timestamp {
+	return timestamppb.New(t)
+}
+
+func PbTimeToGoTime(pbTime *timestamppb.Timestamp) xtime.Time {
+	return pbTime.AsTime()
 }

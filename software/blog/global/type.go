@@ -1,5 +1,7 @@
 package global
 
+import "encoding/json"
+
 type ImageType int
 
 const (

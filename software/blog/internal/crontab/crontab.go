@@ -71,6 +71,7 @@ func (s *DefaultCronJobService) RedisToES(c context.Context) error {
 // RedisToMongo 同步redis数据到Mongo中 数据持久化
 func (s *DefaultCronJobService) RedisToMongo(c context.Context) error {
 	//TODO implement me 评论点赞数
+	fmt.Println(1111)
 	return nil
 }
 

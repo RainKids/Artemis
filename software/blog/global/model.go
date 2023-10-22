@@ -6,8 +6,11 @@ import (
 )
 
 type ModelTime struct {
-	CreatedAt time.Time      `json:"createdAt" ` // 创建时间
-	UpdatedAt time.Time      `json:"updatedAt"`  // 更新时间
+	CreatedAt time.Time `json:"createdAt" ` // 创建时间
+	UpdatedAt time.Time `json:"updatedAt"`  // 更新时间
+}
+
+type DeleteTime struct {
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 }
 

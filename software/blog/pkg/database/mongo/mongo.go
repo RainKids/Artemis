@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-type MongoDB struct {
+type Options struct {
 	UserName    string   `toml:"username" json:"username" yaml:"username"  env:"MONGO_USERNAME"`
 	Password    string   `toml:"password" json:"password" yaml:"password"  env:"MONGO_PASSWORD"`
 	Endpoints   []string `toml:"endpoints" json:"endpoints" yaml:"endpoints" env:"MONGO_ENDPOINTS" envSeparator:","`
@@ -24,34 +24,42 @@ type MongoDB struct {
 	Client      *mongo.Client
 }
 
-func NewOptions(v *viper.Viper, logger *zap.Logger) (*MongoDB, error) {
+type MongoDB struct {
+	DB     *mongo.Database
+	Client *mongo.Client
+}
+
+func NewOptions(v *viper.Viper, logger *zap.Logger) (*Options, error) {
 	var (
 		err error
-		m   = new(MongoDB)
+		o   = new(Options)
 	)
-	if err = v.UnmarshalKey("mongo", m); err != nil {
+	if err = v.UnmarshalKey("mongo", o); err != nil {
 		return nil, errors.Wrap(err, "unmarshal database mongo option error")
 	}
 
-	logger.Info("load database options success", zap.Any("database mongo options", m))
-	return m, err
+	logger.Info("load database options success", zap.Any("database mongo options", o))
+	return o, err
 }
 
-func New(m *MongoDB) (*MongoDB, error) {
-	if len(m.Endpoints) == 0 {
+func New(o *Options) (*MongoDB, error) {
+	if len(o.Endpoints) == 0 {
 		return nil, errors.New("缺少mongo配置")
 	} else {
-		mongodb, err := initDB(m)
+		mongodb, err := initDB(o)
 		if err != nil {
 			return nil, err
 		}
-		m.DB = mongodb.Database(m.Database)
+		o.DB = mongodb.Database(o.Database)
 
 	}
-	return m, nil
+	return &MongoDB{
+		o.DB,
+		o.Client,
+	}, nil
 }
 
-func initDB(m *MongoDB) (*mongo.Client, error) {
+func initDB(m *Options) (*mongo.Client, error) {
 	opts := options.Client()
 	if m.UserName != "" && m.Password != "" {
 		cred := options.Credential{
@@ -86,14 +94,14 @@ func initDB(m *MongoDB) (*mongo.Client, error) {
 	return client, nil
 }
 
-func (m *MongoDB) GetAuthDB() string {
+func (m *Options) GetAuthDB() string {
 	if m.AuthDB != "" {
 		return m.AuthDB
 	}
 
 	return m.Database
 }
-func (db *MongoDB) Close(ctx context.Context) error {
+func (db *Options) Close(ctx context.Context) error {
 	if db.Client == nil {
 		return nil
 	}

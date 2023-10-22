@@ -15,4 +15,4 @@ func CreateInitControllersFn(
 }
 
 // ProviderSet controllers wire
-var RouterProviderSet = wire.NewSet(NewController, CreateInitControllersFn)
+var ProviderSet = wire.NewSet(NewController, CreateInitControllersFn)

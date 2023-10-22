@@ -1,17 +1,19 @@
 package cron
 
 import (
+	"blog/pkg/database/redis"
 	"context"
 	"github.com/gochore/dcron"
+	"github.com/google/wire"
 	"github.com/pkg/errors"
-	"github.com/redis/go-redis/v9"
+	goredis "github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"time"
 )
 
 type RedisAtomic struct {
-	client *redis.Client
+	client *goredis.Client
 }
 
 func (m *RedisAtomic) SetIfNotExists(ctx context.Context, key, value string) bool {
@@ -51,7 +53,7 @@ func NewOptions(v *viper.Viper, logger *zap.Logger) (*Options, error) {
 	return o, err
 }
 
-func New(o *Options, logger *zap.Logger, rdb *redis.Client, init InitServers) (*Server, error) {
+func New(o *Options, logger *zap.Logger, rdb *redis.RedisDB, init InitServers) (*Server, error) {
 	optionals := make(map[string]ServerOptional)
 	for name, spec := range o.Projects {
 		if jobFunc, ok := init[name]; ok {
@@ -65,7 +67,7 @@ func New(o *Options, logger *zap.Logger, rdb *redis.Client, init InitServers) (*
 		}
 	}
 	atomic := &RedisAtomic{
-		client: rdb,
+		client: rdb.Client,
 	}
 	return &Server{
 		o:      o,
@@ -115,3 +117,5 @@ func (s *Server) Stop() error {
 	}
 	return nil
 }
+
+var ProviderSet = wire.NewSet(New, NewOptions)

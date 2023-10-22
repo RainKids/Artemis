@@ -20,8 +20,7 @@ type repository struct {
 }
 
 func (r *repository) Init() error {
-	//TODO implement me
-	return nil
+	return r.Migrate()
 }
 
 func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.Client, mongo *mongo.MongoDB) Repository {

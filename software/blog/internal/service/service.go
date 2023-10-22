@@ -10,7 +10,7 @@ type service struct {
 }
 
 func (s *service) Advert() AdvertService {
-	return s.Advert()
+	return s.advert
 }
 
 func NewService(log *zap.Logger, repository repository.Repository) Service {

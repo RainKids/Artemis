@@ -2,10 +2,12 @@ package repository
 
 import (
 	"blog/internal/biz/po"
+	"blog/internal/biz/vo"
 	"blog/pkg/database"
 	"blog/pkg/database/postgres"
 	"blog/pkg/database/redis"
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -32,10 +34,20 @@ func (a *advertRepository) Create(c context.Context, advert *po.Advert) (*po.Adv
 	return advert, nil
 }
 
-func (a *advertRepository) List(c context.Context, title string, page, pageSize int) ([]*po.Advert, int64, error) {
+func (a *advertRepository) List(c context.Context, query map[string]interface{}, page, pageSize int) ([]*vo.Advert, int64, error) {
+	var adverts []*vo.Advert
+	var count int64
+	err := a.db.WithContext(c).Model(&po.Advert{}).Where(query).Scopes(database.Paginate(page, pageSize)).Find(&adverts).Count(&count).Error
+	if err != nil {
+		return nil, 0, errors.Errorf("get advert list db error: %s", err)
+	}
+	return adverts, count, nil
+}
+
+func (a *advertRepository) SysList(c context.Context, query map[string]interface{}, page, pageSize int) ([]*po.Advert, int64, error) {
 	var adverts []*po.Advert
 	var count int64
-	err := a.db.WithContext(c).Where(`title = ?`, title).Scopes(database.Paginate(page, pageSize)).Find(adverts).Count(&count).Error
+	err := a.db.WithContext(c).Model(&po.Advert{}).Where(query).Scopes(database.Paginate(page, pageSize)).Find(adverts).Count(&count).Error
 	if err != nil {
 		return nil, 0, errors.Errorf("get advert list db error: %s", err)
 	}
@@ -44,7 +56,7 @@ func (a *advertRepository) List(c context.Context, title string, page, pageSize 
 
 func (a *advertRepository) Retrieve(c context.Context, id int64) (*po.Advert, error) {
 	advert := new(po.Advert)
-	err := a.db.WithContext(c).Where("api_id = ? ", id).First(advert).Error
+	err := a.db.WithContext(c).Where("id = ? ", id).First(advert).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errors.Wrapf(err, "查看对象不存在在或无权查看[id=%d]", id)
 	}
@@ -52,7 +64,7 @@ func (a *advertRepository) Retrieve(c context.Context, id int64) (*po.Advert, er
 }
 
 func (a *advertRepository) Update(c context.Context, advert *po.Advert) (*po.Advert, error) {
-	tx := a.db.WithContext(c).Model(advert.TableName()).Where("id = ?", advert.ID).Updates(advert)
+	tx := a.db.WithContext(c).Model(advert).Where("id = ?", advert.ID).Updates(advert)
 	if err := tx.Error; err != nil {
 		return nil, errors.Errorf("db error: %s", err)
 	}
@@ -76,5 +88,8 @@ func (a *advertRepository) Delete(c context.Context, id int64) error {
 }
 
 func (a *advertRepository) Migrate() error {
-	return a.db.AutoMigrate(&po.Advert{})
+	fmt.Println(3333)
+	err := a.db.AutoMigrate(&po.Advert{})
+	fmt.Println(err)
+	return err
 }

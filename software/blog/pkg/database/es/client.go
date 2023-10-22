@@ -69,25 +69,27 @@ type Options struct {
 	Bulk                       *Bulk         `yaml:"bulk"`
 	DebugMode                  bool          `yaml:"debugMode"`
 	Scheme                     string        `yaml:"scheme"`
+	logger                     *zap.Logger
 }
 
 // NewOptions for ES
-func NewOptions(v *viper.Viper, logger *zap.Logger) *Options {
+func NewOptions(v *viper.Viper, logger *zap.Logger) (*Options, error) {
 	var (
 		err error
 		o   = new(Options)
 	)
+	o.logger = logger
 	if err = v.UnmarshalKey("es", o); err != nil {
 		logger.Error("unmarshal es option error", zap.Error(err))
-		return nil
+		return nil, err
 	}
 
 	logger.Info("load es options success", zap.Any("es options", o))
-	return o
+	return o, nil
 }
 
 // New 初始化ES连接信息
-func New(o *Options, logger *zap.Logger) (esConn *elastic.Client) {
+func New(o *Options) (*Client, error) {
 
 	EsConn = &Client{
 		Urls:           o.URL,
@@ -101,26 +103,24 @@ func New(o *Options, logger *zap.Logger) (esConn *elastic.Client) {
 
 	esOptions := getBaseOptions(o.HealthCheck, o.Sniff, o.Gzip, o.URL...)
 	err := EsConn.newClient(esOptions)
-	EsConn.Client = esConn
 	if err != nil {
-		logger.Error("es NewClient create error", zap.Error(err))
-		return
+		o.logger.Error("es NewClient create error", zap.Error(err))
+		return nil, err
 	}
 	var esConnInfo *elastic.PingResult
 	var code int
 	for _, url := range o.URL {
-		esConnInfo, code, err = esConn.Ping(url).Do(context.Background())
+		esConnInfo, code, err = EsConn.Client.Ping(url).Do(context.Background())
 		if err != nil {
-			logger.Error("Ping esConn error", zap.Error(err))
-			return
+			o.logger.Error("Ping esConn error", zap.Error(err))
+			return nil, err
 		}
 	}
-	logger.Info("ES returned with code and version",
+	o.logger.Info("ES returned with code and version",
 		zap.Any("code", code),
-		zap.Any("esConn", esConn),
 		zap.Any("version", esConnInfo.Version.Number),
 	)
-	return esConn
+	return EsConn, nil
 }
 
 func (c *Client) newClient(options []elastic.ClientOptionFunc) error {
@@ -199,6 +199,15 @@ func DefaultBulk(workers, actionSize, requestSize int, flushInterval time.Durati
 		AfterFunc:     defaultBulkFunc,
 		Ctx:           context.Background(),
 	}
+	//return &Bulk{
+	//	Workers:       3,
+	//	FlushInterval: 1,
+	//	ActionSize:    500,
+	//	RequestSize:   5 << 20, // 5 MB,
+	//	AfterFunc:     defaultBulkFunc,
+	//	Ctx:           context.Background(),
+	//}
+
 }
 
 func defaultBulkFunc(executionId int64, requests []elastic.BulkableRequest, response *elastic.BulkResponse, err error) {
