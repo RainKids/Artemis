@@ -16,6 +16,13 @@ type advertService struct {
 	advertRepository repository.AdvertRepository
 }
 
+func newAdvertService(logger *zap.Logger, advertRepository repository.AdvertRepository) AdvertService {
+	return &advertService{
+		logger:           logger.With(zap.String("type", "AdvertService")),
+		advertRepository: advertRepository,
+	}
+}
+
 func (a *advertService) Create(ctx context.Context, advert *po.Advert) (*po.Advert, error) {
 	return a.advertRepository.Create(ctx, advert)
 }
@@ -58,11 +65,4 @@ func (a *advertService) Update(ctx context.Context, advert *po.Advert) (*po.Adve
 
 func (a *advertService) Delete(ctx context.Context, id int64) error {
 	return a.advertRepository.Delete(ctx, id)
-}
-
-func newAdvertService(logger *zap.Logger, advertRepository repository.AdvertRepository) AdvertService {
-	return &advertService{
-		logger:           logger.With(zap.String("type", "AdvertService")),
-		advertRepository: advertRepository,
-	}
 }

@@ -7,15 +7,21 @@ import (
 
 type service struct {
 	advert AdvertService
+	banner BannerService
+}
+
+func NewService(log *zap.Logger, repository repository.Repository) Service {
+	r := &service{
+		advert: newAdvertService(log, repository.Advert()),
+		banner: newBannerService(log, repository.Banner()),
+	}
+	return r
 }
 
 func (s *service) Advert() AdvertService {
 	return s.advert
 }
 
-func NewService(log *zap.Logger, repository repository.Repository) Service {
-	r := &service{
-		advert: newAdvertService(log, repository.Advert()),
-	}
-	return r
+func (s *service) Banner() BannerService {
+	return s.banner
 }

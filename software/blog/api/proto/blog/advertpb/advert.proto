@@ -34,5 +34,5 @@ message AdvertListResponse {
 }
 
 service RPC {
-  rpc GetDeliveryList(AdvertListRequest) returns (AdvertListResponse){}
+  rpc AdvertList(AdvertListRequest) returns (AdvertListResponse){}
 }

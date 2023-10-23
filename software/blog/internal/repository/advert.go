@@ -7,7 +7,6 @@ import (
 	"blog/pkg/database/postgres"
 	"blog/pkg/database/redis"
 	"context"
-	"fmt"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -47,7 +46,7 @@ func (a *advertRepository) List(c context.Context, query map[string]interface{},
 func (a *advertRepository) SysList(c context.Context, query map[string]interface{}, page, pageSize int) ([]*po.Advert, int64, error) {
 	var adverts []*po.Advert
 	var count int64
-	err := a.db.WithContext(c).Model(&po.Advert{}).Where(query).Scopes(database.Paginate(page, pageSize)).Find(adverts).Count(&count).Error
+	err := a.db.WithContext(c).Model(&po.Advert{}).Where(query).Scopes(database.Paginate(page, pageSize)).Find(&adverts).Count(&count).Error
 	if err != nil {
 		return nil, 0, errors.Errorf("get advert list db error: %s", err)
 	}
@@ -88,8 +87,5 @@ func (a *advertRepository) Delete(c context.Context, id int64) error {
 }
 
 func (a *advertRepository) Migrate() error {
-	fmt.Println(3333)
-	err := a.db.AutoMigrate(&po.Advert{})
-	fmt.Println(err)
-	return err
+	return a.db.AutoMigrate(&po.Advert{})
 }

@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/duke-git/lancet/v2/convertor"
+	"github.com/gochore/dcron"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"time"
@@ -71,7 +72,11 @@ func (s *DefaultCronJobService) RedisToES(c context.Context) error {
 // RedisToMongo 同步redis数据到Mongo中 数据持久化
 func (s *DefaultCronJobService) RedisToMongo(c context.Context) error {
 	//TODO implement me 评论点赞数
+	if task, ok := dcron.TaskFromContext(c); ok {
+		fmt.Println("run:", task.Job.Spec(), task.Key)
+	}
 	fmt.Println(1111)
+
 	return nil
 }
 

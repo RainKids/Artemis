@@ -9,5 +9,5 @@ type Advert struct {
 
 type AdvertList struct {
 	Result []*Advert `json:"result"`
-	Count  int64
+	Count  int64     `json:"count"`
 }

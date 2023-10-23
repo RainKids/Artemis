@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RPC_GetDeliveryList_FullMethodName = "/advertPb.RPC/GetDeliveryList"
+	RPC_AdvertList_FullMethodName = "/advertPb.RPC/AdvertList"
 )
 
 // RPCClient is the client API for RPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	GetDeliveryList(ctx context.Context, in *AdvertListRequest, opts ...grpc.CallOption) (*AdvertListResponse, error)
+	AdvertList(ctx context.Context, in *AdvertListRequest, opts ...grpc.CallOption) (*AdvertListResponse, error)
 }
 
 type rPCClient struct {
@@ -37,9 +37,9 @@ func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
 }
 
-func (c *rPCClient) GetDeliveryList(ctx context.Context, in *AdvertListRequest, opts ...grpc.CallOption) (*AdvertListResponse, error) {
+func (c *rPCClient) AdvertList(ctx context.Context, in *AdvertListRequest, opts ...grpc.CallOption) (*AdvertListResponse, error) {
 	out := new(AdvertListResponse)
-	err := c.cc.Invoke(ctx, RPC_GetDeliveryList_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, RPC_AdvertList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *rPCClient) GetDeliveryList(ctx context.Context, in *AdvertListRequest, 
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	GetDeliveryList(context.Context, *AdvertListRequest) (*AdvertListResponse, error)
+	AdvertList(context.Context, *AdvertListRequest) (*AdvertListResponse, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -58,8 +58,8 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) GetDeliveryList(context.Context, *AdvertListRequest) (*AdvertListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDeliveryList not implemented")
+func (UnimplementedRPCServer) AdvertList(context.Context, *AdvertListRequest) (*AdvertListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdvertList not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -74,20 +74,20 @@ func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
 	s.RegisterService(&RPC_ServiceDesc, srv)
 }
 
-func _RPC_GetDeliveryList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RPC_AdvertList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AdvertListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RPCServer).GetDeliveryList(ctx, in)
+		return srv.(RPCServer).AdvertList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: RPC_GetDeliveryList_FullMethodName,
+		FullMethod: RPC_AdvertList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).GetDeliveryList(ctx, req.(*AdvertListRequest))
+		return srv.(RPCServer).AdvertList(ctx, req.(*AdvertListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +100,8 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetDeliveryList",
-			Handler:    _RPC_GetDeliveryList_Handler,
+			MethodName: "AdvertList",
+			Handler:    _RPC_AdvertList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

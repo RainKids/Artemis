@@ -16,6 +16,7 @@ type repository struct {
 	es       *es.Client
 	mongo    *mongo.MongoDB
 	advert   AdvertRepository
+	banner   BannerRepository
 	migrants []Migrant
 }
 
@@ -30,11 +31,16 @@ func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.
 		es:     es,
 		mongo:  mongo,
 		advert: newAdvertRepository(log, db, rdb),
+		banner: newBannerRepository(log, db, rdb),
 	}
 	r.migrants = getMigrants(
 		r.advert,
+		r.banner,
 	)
-
+	err := r.Init()
+	if err != nil {
+		log.Error("DB Table Migrate Error", zap.Error(err))
+	}
 	return r
 }
 
@@ -95,4 +101,8 @@ func (r *repository) Migrate() error {
 
 func (r *repository) Advert() AdvertRepository {
 	return r.advert
+}
+
+func (r *repository) Banner() BannerRepository {
+	return r.banner
 }
