@@ -1,7 +1,6 @@
 app:
     name: artemis
 cron:
-    servername: artemis_cron
     projects:
         sync.mongo.total.per.5s: '*/15 * * * * *'
 es:
@@ -23,7 +22,7 @@ grpc:
         mode: debug
         port: 8008
         schema: bbs
-        servicename: system-server-grpc
+        servicename: blog-server-grpc
         timeout: 300
         ttl: 5
 http:

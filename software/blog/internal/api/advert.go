@@ -12,6 +12,14 @@ func init() {
 	routerNoAuth = append(routerNoAuth, registerNoAuthAdvertRouter)
 }
 
+// Advert
+// @Summary 广告列表
+// @Description   广告列表接口
+// @Tag Advert
+// @Accept  application/json
+// @Produce  application/json
+// @Success 200 {object} response.Data{}
+// @Router /api/v1/advert [get]
 func (c *Controller) AdvertList(ctx *gin.Context) {
 	var advertParams dto.AdvertParamsRequest
 	err := ctx.ShouldBindQuery(&advertParams)
@@ -26,6 +34,15 @@ func (c *Controller) AdvertList(ctx *gin.Context) {
 	response.SuccessResponse(ctx, resp)
 	return
 }
+
+// Advert
+// @Summary 广告详情
+// @Description   广告详情接口
+// @Tag Advert
+// @Accept  application/json
+// @Produce  application/json
+// @Success 200 {object} response.Data{}
+// @Router /api/v1/advert/{id} [get]
 func (c *Controller) AdvertRetrieve(ctx *gin.Context) {
 	var advertUri dto.IDUriRequest
 	err := ctx.ShouldBindUri(&advertUri)

@@ -1,6 +1,7 @@
 package http
 
 import (
+	_ "blog/docs"
 	"blog/pkg/tools/network"
 	"blog/pkg/transport/http/middleware/log"
 	"blog/pkg/transport/http/middleware/metric/prometheus"
@@ -15,6 +16,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/viper"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"go.opentelemetry.io/otel/sdk/trace"
 	"go.uber.org/zap"
@@ -74,6 +77,7 @@ func NewRouter(o *Options, logger *zap.Logger, init InitControllers, tracer *tra
 	r.Use(ginprometheus.New(r).Middleware())
 	r.Use(otelgin.Middleware(fmt.Sprintf("%s:%s:%d", o.ServerName, o.Host, o.Port), otelgin.WithTracerProvider(tracer)))
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	pprof.Register(r)
 	init(r)
 	return r

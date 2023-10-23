@@ -3,11 +3,13 @@ package log
 import (
 	"blog/pkg/transport/http/response"
 	"bytes"
+	"encoding/json"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"io/ioutil"
+	"strings"
 	"time"
 )
 
@@ -83,7 +85,15 @@ func GinzapWithConfig(logger *zap.Logger, conf *ginzap.Config) gin.HandlerFunc {
 				if conf.TimeFormat != "" {
 					fields = append(fields, zap.String("time", end.Format(conf.TimeFormat)))
 				}
-				logger.Info(res.Message, fields...)
+				if strings.Split(blw.Header().Get("Content-Type"), ";")[0] == "application/json" {
+					err := json.Unmarshal(blw.body.Bytes(), &res)
+					if err == nil {
+						logger.Info(res.Message, fields...)
+					} else {
+						logger.Error(res.Message, zap.Error(err))
+					}
+				}
+
 			}
 		}
 	}

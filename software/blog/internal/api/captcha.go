@@ -13,6 +13,13 @@ func init() {
 	routerNoAuth = append(routerNoAuth, registerNoAuthCaptchaRouter)
 }
 
+// Captha
+// @Summary 验证码
+// @Description  获取登陆验证码接口
+// @Accept  application/json
+// @Produce  application/json
+// @Success 200 {object} response.Data{}
+// @Router /api/v1/captcha [get]
 func (c *Controller) Captcha(ctx *gin.Context) {
 	// dirver := base64Captcha.NewDriverDigit(global.CaptchaImgHeight, global.CaptchaImgWidth, global.CaptchaKeyLong, 0.7, 80)
 	// cp := base64Captcha.NewCaptcha(dirver, store.UseWithCtx(c))

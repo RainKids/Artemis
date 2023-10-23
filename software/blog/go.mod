@@ -30,6 +30,8 @@ require (
 	github.com/spf13/cobra v0.0.3
 	github.com/spf13/viper v1.17.0
 	github.com/stretchr/testify v1.8.4
+	github.com/swaggo/files v1.0.1
+	github.com/swaggo/gin-swagger v1.6.0
 	github.com/uptrace/opentelemetry-go-extra/otelgorm v0.2.3
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
 	go.etcd.io/etcd/client/v3 v3.5.9
@@ -46,12 +48,16 @@ require (
 	go.opentelemetry.io/otel/sdk/metric v1.19.0
 	go.uber.org/zap v1.26.0
 	google.golang.org/grpc v1.58.2
+	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/driver/postgres v1.5.3
 	gorm.io/gorm v1.25.5
 )
 
 require (
+	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/PuerkitoBio/purell v1.1.1 // indirect
+	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytedance/sonic v1.10.0 // indirect
@@ -68,6 +74,10 @@ require (
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.5 // indirect
+	github.com/go-openapi/jsonpointer v0.19.5 // indirect
+	github.com/go-openapi/jsonreference v0.19.6 // indirect
+	github.com/go-openapi/spec v0.20.4 // indirect
+	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
@@ -110,6 +120,7 @@ require (
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
+	github.com/swaggo/swag v1.8.12 // indirect
 	github.com/tklauser/go-sysconf v0.3.6 // indirect
 	github.com/tklauser/numcpus v0.2.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
@@ -133,10 +144,10 @@ require (
 	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/tools v0.13.0 // indirect
 	google.golang.org/genproto v0.0.0-20230913181813-007df8e322eb // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230913181813-007df8e322eb // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230920204549-e6e6cdab5c13 // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

@@ -100,12 +100,17 @@ func (a *Application) AwaitSignal() {
 	a.logger.Info("receive a signal", zap.String("signal", s.String()))
 	if a.httpServer != nil {
 		if err := a.httpServer.Stop(); err != nil {
-			a.logger.Warn("stop http server error", zap.Error(err))
+			a.logger.Error("stop http server error", zap.Error(err))
 		}
 	}
 	if a.grpcServer != nil {
 		if err := a.grpcServer.Stop(); err != nil {
-			a.logger.Warn("stop grpc server error", zap.Error(err))
+			a.logger.Error("stop grpc server error", zap.Error(err))
+		}
+	}
+	if a.cronServer != nil {
+		if err := a.cronServer.Stop(); err != nil {
+			a.logger.Error("stop cron server error", zap.Error(err))
 		}
 	}
 
