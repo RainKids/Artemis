@@ -1,35 +1,20 @@
 package grpcserver
 
 import (
-	"blog/api/proto/blog/advertpb"
+	"blog/api/proto"
 	"blog/internal/biz/dto"
-	"blog/internal/service"
 	"blog/pkg/tools/timeparse"
 	"context"
-	"go.uber.org/zap"
 )
 
-type advertGrpcServer struct {
-	logger  *zap.Logger
-	service service.AdvertService
-	advertPb.UnimplementedRPCServer
-}
-
-func newAdvertGrpcServer(logger *zap.Logger, service service.AdvertService) *advertGrpcServer {
-	return &advertGrpcServer{
-		logger:  logger.With(zap.String("type", "AdvertService")),
-		service: service,
-	}
-}
-
-func (s *advertGrpcServer) AdvertList(c context.Context, req *advertPb.AdvertListRequest) (*advertPb.AdvertListResponse, error) {
-	list, count, err := s.service.SysList(c, dto.AdvertSearchParams{req.Title}, int(req.Page), int(req.PageSize))
+func (s *GrpcServer) AdvertList(c context.Context, req *proto.AdvertListRequest) (*proto.AdvertListResponse, error) {
+	list, count, err := s.service.Advert().SysList(c, dto.AdvertSearchParams{req.Title}, int(req.Page), int(req.PageSize))
 	if err != nil {
 		return nil, err
 	}
-	result := make([]*advertPb.Advert, 0, count)
+	result := make([]*proto.Advert, 0, count)
 	for _, advert := range list {
-		result = append(result, &advertPb.Advert{ID: advert.ID,
+		result = append(result, &proto.Advert{ID: advert.ID,
 			Title:     advert.Title,
 			Href:      advert.Href,
 			Image:     advert.Image,
@@ -38,7 +23,7 @@ func (s *advertGrpcServer) AdvertList(c context.Context, req *advertPb.AdvertLis
 			CreatedAt: timeparse.GoTimeToPbTime(advert.CreatedAt),
 		})
 	}
-	return &advertPb.AdvertListResponse{
+	return &proto.AdvertListResponse{
 		Count:  count,
 		Result: result,
 	}, nil

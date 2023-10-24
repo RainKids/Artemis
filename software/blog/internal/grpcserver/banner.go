@@ -1,34 +1,19 @@
 package grpcserver
 
 import (
-	bannerPb "blog/api/proto/blog/bannerpb"
-	"blog/internal/service"
+	"blog/api/proto"
 	"blog/pkg/tools/timeparse"
 	"context"
-	"go.uber.org/zap"
 )
 
-type bannerGrpcServer struct {
-	logger  *zap.Logger
-	service service.BannerService
-	bannerPb.UnimplementedRPCServer
-}
-
-func newBannerGrpcServer(logger *zap.Logger, service service.BannerService) *bannerGrpcServer {
-	return &bannerGrpcServer{
-		logger:  logger.With(zap.String("type", "AdvertService")),
-		service: service,
-	}
-}
-
-func (s *bannerGrpcServer) BannerList(c context.Context, req *bannerPb.BannerListRequest) (*bannerPb.BannerListResponse, error) {
-	list, count, err := s.service.SysList(c, int(req.Page), int(req.PageSize))
+func (s *GrpcServer) BannerList(c context.Context, req *proto.BannerListRequest) (*proto.BannerListResponse, error) {
+	list, count, err := s.service.Banner().SysList(c, int(req.Page), int(req.PageSize))
 	if err != nil {
 		return nil, err
 	}
-	result := make([]*bannerPb.Banner, 0, count)
+	result := make([]*proto.Banner, 0, count)
 	for _, banner := range list {
-		result = append(result, &bannerPb.Banner{
+		result = append(result, &proto.Banner{
 			ID:        banner.ID,
 			Path:      banner.Path,
 			Hash:      banner.Hash,
@@ -38,7 +23,7 @@ func (s *bannerGrpcServer) BannerList(c context.Context, req *bannerPb.BannerLis
 			UpdatedAt: timeparse.GoTimeToPbTime(banner.UpdatedAt),
 		})
 	}
-	return &bannerPb.BannerListResponse{
+	return &proto.BannerListResponse{
 		Count:  count,
 		Result: result,
 	}, nil

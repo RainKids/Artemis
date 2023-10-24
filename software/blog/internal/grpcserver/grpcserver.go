@@ -1,18 +1,20 @@
 package grpcserver
 
 import (
+	"blog/api/proto"
 	"blog/internal/service"
 	"go.uber.org/zap"
 )
 
 type GrpcServer struct {
-	advert *advertGrpcServer
-	banner *bannerGrpcServer
+	logger  *zap.Logger
+	service service.Service
+	proto.UnimplementedBlogServiceServer
 }
 
-func NewGrpcServer(logger *zap.Logger, service service.Service) *GrpcServer {
+func NewGrpcServer(logger *zap.Logger, service service.Service) (*GrpcServer, error) {
 	return &GrpcServer{
-		advert: newAdvertGrpcServer(logger, service.Advert()),
-		banner: newBannerGrpcServer(logger, service.Banner()),
-	}
+		logger:  logger,
+		service: service,
+	}, nil
 }

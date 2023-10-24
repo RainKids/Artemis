@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "./;proto";
+
+import  "advert.proto";
+import "banner.proto";
+
+service BlogService {
+  rpc AdvertList(AdvertListRequest) returns (AdvertListResponse){}
+  rpc BannerList(BannerListRequest) returns (BannerListResponse){}
+
+}

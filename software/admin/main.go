@@ -1,5 +1,7 @@
 package main
 
-func main() {
+import "admin/cmd"
 
+func main() {
+	cmd.Execute()
 }

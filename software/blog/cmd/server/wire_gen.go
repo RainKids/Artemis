@@ -103,7 +103,10 @@ func CreateApp(cf string) (*application.Application, error) {
 	if err2 != nil {
 		return nil, err
 	}
-	grpcServer := grpcserver.NewGrpcServer(zapLogger, serviceService)
+	grpcServer, err2 := grpcserver.NewGrpcServer(zapLogger, serviceService)
+	if err2 != nil {
+		return nil, err
+	}
 	initServers := grpcserver.CreateInitGrpcServersFn(grpcServer)
 	server2, err2 := grpc.NewServer(serverOptions, zapLogger, initServers, tracerProvider)
 	if err2 != nil {

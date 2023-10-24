@@ -1,8 +1,5 @@
 app:
     name: artemis
-cron:
-    projects:
-        sync.mongo.total.per.5s: '*/15 * * * * *'
 es:
     bulk:
         actionsize: 500

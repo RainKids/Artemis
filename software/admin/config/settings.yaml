@@ -1,0 +1,59 @@
+app:
+    name: artemis
+cron:
+    projects:
+        sync-crontest-total-per-5s: '*/15 * * * * *'
+es:
+    bulk:
+        actionsize: 500
+        flushinterval: 1
+        requestsize: 5
+        workers: 3
+    healthcheck: 10
+    url: http://127.0.0.1:9200
+grpc:
+    client:
+        etcdaddr: 127.0.0.1:2379
+        tag: use-by-system-server
+        timeout: 5
+    server:
+        etcdaddr: 127.0.0.1:2379
+        host: 127.0.0.1
+        mode: debug
+        port: 8001
+        schema: bbs
+        servicename: admin-server-grpc
+        timeout: 300
+        ttl: 5
+http:
+    host: 127.0.0.1
+    mode: debug
+    port: 8081
+    servername: artemis-blog-api
+jaeger:
+    endpoint: http://127.0.0.1:14268/api/traces
+    logspans: true
+    param: 1
+    service: system-grpc-server
+    type: const
+log:
+    level: info
+    maxage: 3
+    maxbackups: 3
+    maxsize: 500
+    stdout: true
+mongo:
+    database: artemis_blog
+    endpoints: 127.0.0.1:27017
+postgres:
+    debug: true
+    dsn: user=postgres password=123456 host=127.0.0.1 port=5432 dbname=artemis-blog sslmode=disable
+redis:
+    idletimeout: 10
+    maxactive: 500
+    maxidle: 100
+    network: tcp
+    timeout: 5
+    url: 127.0.0.1:6379
+server:
+    uuid: 82070dd6-d673-4df6-9583-24e0c7565db0
