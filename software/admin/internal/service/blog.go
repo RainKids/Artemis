@@ -4,6 +4,7 @@ import (
 	"admin/api/proto"
 	"admin/internal/biz/dto"
 	"admin/internal/biz/vo"
+	"admin/internal/grpcclient"
 	"admin/pkg/tools/timeparse"
 	"blog/global"
 	"context"
@@ -12,10 +13,10 @@ import (
 
 type blogService struct {
 	logger     *zap.Logger
-	blogPpcSvc proto.BlogServiceClient
+	blogPpcSvc *grpcclient.BlogClient
 }
 
-func newBlogService(logger *zap.Logger, blogPpcSvc proto.BlogServiceClient) BlogService {
+func newBlogService(logger *zap.Logger, blogPpcSvc *grpcclient.BlogClient) BlogService {
 	return &blogService{
 		logger:     logger.With(zap.String("type", "BlogService")),
 		blogPpcSvc: blogPpcSvc,
@@ -23,14 +24,11 @@ func newBlogService(logger *zap.Logger, blogPpcSvc proto.BlogServiceClient) Blog
 }
 
 func (b *blogService) AdvertList(c context.Context, req *dto.AdvertParamsRequest) (*vo.AdvertList, error) {
-	resp, err := b.blogPpcSvc.AdvertList(c, &proto.AdvertListRequest{
+	resp, err := b.blogPpcSvc.Client.AdvertList(c, &proto.AdvertListRequest{
 		Title:    req.Title,
 		Page:     int64(req.Page),
 		PageSize: int64(req.PageSize),
 	})
-	if err != nil {
-		return nil, err
-	}
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +52,7 @@ func (b *blogService) AdvertList(c context.Context, req *dto.AdvertParamsRequest
 
 func (b *blogService) BannerList(c context.Context, page, pageSize int) (*vo.BannerList, error) {
 
-	resp, err := b.blogPpcSvc.BannerList(c, &proto.BannerListRequest{Page: int64(page), PageSize: int64(pageSize)})
+	resp, err := b.blogPpcSvc.Client.BannerList(c, &proto.BannerListRequest{Page: int64(page), PageSize: int64(pageSize)})
 	if err != nil {
 		return nil, err
 	}

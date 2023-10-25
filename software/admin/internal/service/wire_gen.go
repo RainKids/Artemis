@@ -7,7 +7,7 @@
 package service
 
 import (
-	"admin/api/proto"
+	"admin/internal/grpcclient"
 	"admin/internal/repository"
 	"admin/pkg/config"
 	"admin/pkg/logger"
@@ -16,7 +16,7 @@ import (
 
 // Injectors from wire.go:
 
-func CreateService(cf string, rpo repository.Repository, blogRpcSvc proto.BlogServiceClient) (Service, error) {
+func CreateService(cf string, rpo repository.Repository, blogRpcSvc *grpcclient.BlogClient) (Service, error) {
 	viper, err := config.New(cf)
 	if err != nil {
 		return nil, err

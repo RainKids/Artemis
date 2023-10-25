@@ -22,7 +22,7 @@ grpc:
         mode: debug
         port: 8001
         schema: bbs
-        servicename: admin-server-grpc
+        servername: admin-server-grpc
         timeout: 300
         ttl: 5
 http:
@@ -47,7 +47,7 @@ mongo:
     endpoints: 127.0.0.1:27017
 postgres:
     debug: true
-    dsn: user=postgres password=123456 host=127.0.0.1 port=5432 dbname=artemis-blog sslmode=disable
+    dsn: user=postgres password=123456 host=127.0.0.1 port=5432 dbname=artemis-admin sslmode=disable
 redis:
     idletimeout: 10
     maxactive: 500

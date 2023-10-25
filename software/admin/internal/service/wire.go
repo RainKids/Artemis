@@ -4,7 +4,7 @@
 package service
 
 import (
-	"admin/api/proto"
+	"admin/internal/grpcclient"
 	"admin/internal/repository"
 	"admin/pkg/config"
 	"admin/pkg/logger"
@@ -18,7 +18,7 @@ var ServiceProviderSet = wire.NewSet(
 
 func CreateService(cf string,
 	rpo repository.Repository,
-	blogRpcSvc proto.BlogServiceClient,
+	blogRpcSvc *grpcclient.BlogClient,
 ) (Service, error) {
 	panic(wire.Build(ServiceProviderSet))
 }

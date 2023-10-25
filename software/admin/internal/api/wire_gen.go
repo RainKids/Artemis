@@ -7,7 +7,7 @@
 package api
 
 import (
-	"admin/api/proto"
+	"admin/internal/grpcclient"
 	"admin/internal/repository"
 	"admin/internal/service"
 	"admin/pkg/config"
@@ -18,7 +18,7 @@ import (
 
 // Injectors from wire.go:
 
-func CreateController(cf string, repo repository.Repository, blogRpcSrv proto.BlogServiceClient) (*Controller, error) {
+func CreateController(cf string, repo repository.Repository, blogRpcSrv *grpcclient.BlogClient) (*Controller, error) {
 	viper, err := config.New(cf)
 	if err != nil {
 		return nil, err

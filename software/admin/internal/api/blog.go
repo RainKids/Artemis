@@ -21,12 +21,12 @@ func init() {
 // @Success 200 {object} response.Data{}
 // @Router /api/v1/blog/advert [get]
 func (c *Controller) AdvertList(ctx *gin.Context) {
-	advertParams := &dto.AdvertParamsRequest{}
-	err := ctx.ShouldBindQuery(&advertParams)
+	var advertParams dto.AdvertParamsRequest
+	err := ctx.ShouldBindQuery(advertParams)
 	if err != nil {
 		response.FailedResponse(ctx, exception.NewInternalServerError("params err", err))
 	}
-	resp, err := c.service.Blog().AdvertList(ctx, advertParams)
+	resp, err := c.service.Blog().AdvertList(ctx, &advertParams)
 	if err != nil {
 		response.FailedResponse(ctx, exception.NewAPIExceptionFromError(err))
 		return

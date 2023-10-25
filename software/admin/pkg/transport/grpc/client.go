@@ -5,6 +5,9 @@ import (
 	"admin/pkg/transport/grpc/middleware/exception"
 	"context"
 	"fmt"
+	"google.golang.org/grpc/balancer/roundrobin"
+	grpcInsecure "google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/resolver"
 	golog "log"
 	"time"
 
@@ -19,8 +22,6 @@ import (
 	"go.opentelemetry.io/otel/sdk/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	grpcInsecure "google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/resolver"
 )
 
 type ClientOptions struct {
@@ -32,7 +33,8 @@ type ClientOptions struct {
 	ServerName      string
 }
 type Client struct {
-	o *ClientOptions
+	o      *ClientOptions
+	Logger *zap.Logger
 }
 
 type ClientOptional func(o *ClientOptions)
@@ -79,7 +81,8 @@ func NewClientOptions(v *viper.Viper, logger *zap.Logger, tracer *trace.TracerPr
 
 func NewClient(o *ClientOptions) (*Client, error) {
 	return &Client{
-		o: o,
+		o:      o,
+		Logger: o.logger,
 	}, nil
 }
 
@@ -136,13 +139,16 @@ func (c *Client) dial(service string, insecure bool, options ...ClientOptional) 
 		ServerName:      c.o.ServerName,
 		logger:          c.o.logger,
 	}
-	// options = append(options, WithGrpcDialOptions(grpc.WithInsecure()))
+	//options = append(options, WithGrpcDialOptions(grpc.WithInsecure()))
 	options = append(options, WithGrpcDialOptions(grpc.WithTransportCredentials(grpcInsecure.NewCredentials())))
 
-	options = append(options, WithGrpcDialOptions(grpc.WithDefaultServiceConfig(`{"LoadBalancingPolicy": "round_robin"}`)))
+	options = append(options, WithGrpcDialOptions(grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name))))
 	for _, option := range options {
 		option(o)
 	}
+	go func() {
+
+	}()
 	etcdRegister := discovery.NewResolver(o.EtcdAddr, o.logger)
 	resolver.Register(etcdRegister)
 	addr := fmt.Sprintf("%s:///%s", etcdRegister.Scheme(), service)

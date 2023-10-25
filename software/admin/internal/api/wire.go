@@ -4,7 +4,7 @@
 package api
 
 import (
-	"admin/api/proto"
+	"admin/internal/grpcclient"
 	"admin/internal/repository"
 	"admin/internal/service"
 	"admin/pkg/config"
@@ -22,6 +22,6 @@ var apiProviderSet = wire.NewSet(
 	ProviderSet,
 )
 
-func CreateController(cf string, repo repository.Repository, blogRpcSrv proto.BlogServiceClient) (*Controller, error) {
+func CreateController(cf string, repo repository.Repository, blogRpcSrv *grpcclient.BlogClient) (*Controller, error) {
 	panic(wire.Build(apiProviderSet))
 }

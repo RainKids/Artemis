@@ -16,6 +16,8 @@ type repository struct {
 	es       *es.Client
 	mongo    *mongo.MongoDB
 	hello    HelloRepository
+	api      ApiRepository
+	casbin   CasbinRepository
 	migrants []Migrant
 }
 
@@ -25,13 +27,17 @@ func (r *repository) Init() error {
 
 func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.Client, mongo *mongo.MongoDB) Repository {
 	r := &repository{
-		db:    db.Postgres,
-		rdb:   rdb,
-		es:    es,
-		mongo: mongo,
-		hello: newHelloRepository(log),
+		db:     db.Postgres,
+		rdb:    rdb,
+		es:     es,
+		mongo:  mongo,
+		hello:  newHelloRepository(log),
+		api:    newApiRepository(log, db, rdb),
+		casbin: newCasbinRepository(log, db),
 	}
-	r.migrants = getMigrants()
+	r.migrants = getMigrants(
+		r.Api(),
+		r.Casbin())
 	err := r.Init()
 	if err != nil {
 		log.Error("DB Table Migrate Error", zap.Error(err))
@@ -96,4 +102,12 @@ func (r *repository) Migrate() error {
 
 func (r *repository) Hello() HelloRepository {
 	return r.hello
+}
+
+func (r *repository) Api() ApiRepository {
+	return r.api
+}
+
+func (r *repository) Casbin() CasbinRepository {
+	return r.casbin
 }

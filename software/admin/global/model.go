@@ -15,8 +15,8 @@ type DeleteTime struct {
 }
 
 type OperateBy struct {
-	CreateBy int `json:"createBy"`
-	UpdateBy int `json:"updateBy"`
+	CreateBy int64 `json:"createBy"`
+	UpdateBy int64 `json:"updateBy"`
 }
 
 type Migration struct {

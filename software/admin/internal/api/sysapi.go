@@ -1,0 +1,108 @@
+package api
+
+import (
+	"admin/internal/biz/dto"
+	"admin/internal/common"
+	"admin/pkg/exception"
+	"admin/pkg/transport/http/response"
+	"github.com/gin-gonic/gin"
+)
+
+func init() {
+	routerAuth = append(routerAuth, registerAuthApiRouter)
+	routerNoAuth = append(routerNoAuth, registerNoAuthApiRouter)
+}
+
+func (c *Controller) ApiList(ctx *gin.Context) {
+	apiSearchParams := &dto.ApiSearchParams{}
+	err := ctx.ShouldBindQuery(&apiSearchParams)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewInternalServerError("params err", err))
+	}
+	p := common.GetPermissionFromContext(ctx)
+	resp, err := c.service.Api().List(ctx, apiSearchParams, p)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewAPIExceptionFromError(err))
+		return
+	}
+	response.SuccessResponse(ctx, resp)
+}
+
+func (c *Controller) ApiCreate(ctx *gin.Context) {
+	apiRequest := new(dto.ApiRequest)
+	err := apiRequest.BindValidParam(ctx)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewInternalServerError("params error", err))
+	}
+	resp, err := c.service.Api().Create(ctx, apiRequest)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewAPIExceptionFromError(err))
+		return
+	}
+	response.SuccessResponse(ctx, resp)
+}
+
+func (c *Controller) ApiRetrieve(ctx *gin.Context) {
+	var apiUri dto.IDUriRequest
+	err := ctx.ShouldBindUri(&apiUri)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewInternalServerError("api id error", err))
+	}
+	p := common.GetPermissionFromContext(ctx)
+	resp, err := c.service.Api().Retrieve(ctx, apiUri.ID, p)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewAPIExceptionFromError(err))
+		return
+	}
+	response.SuccessResponse(ctx, resp)
+}
+
+func (c *Controller) ApiUpdate(ctx *gin.Context) {
+	var apiUri dto.IDUriRequest
+	err := ctx.ShouldBindUri(&apiUri)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewInternalServerError("api id error", err))
+	}
+	apiRequest := new(dto.ApiRequest)
+	err = apiRequest.BindValidParam(ctx)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewInternalServerError("params error", err))
+	}
+	p := common.GetPermissionFromContext(ctx)
+	err = c.service.Api().Update(ctx, apiUri.ID, apiRequest, p)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewAPIExceptionFromError(err))
+		return
+	}
+	response.SuccessResponse(ctx, nil)
+}
+
+func (c *Controller) ApiDelete(ctx *gin.Context) {
+	var apiUri dto.IDUriRequest
+	err := ctx.ShouldBindUri(&apiUri)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewInternalServerError("api id error", err))
+	}
+	p := common.GetPermissionFromContext(ctx)
+	err = c.service.Api().Delete(ctx, apiUri.ID, p)
+	if err != nil {
+		response.FailedResponse(ctx, exception.NewAPIExceptionFromError(err))
+		return
+	}
+	response.SuccessResponse(ctx, nil)
+}
+
+func registerAuthApiRouter(v1 *gin.RouterGroup, pc *Controller) {
+	r := v1.Group("/system/api")
+	{
+		r.GET("", pc.ApiList)
+		r.POST("", pc.ApiCreate)
+		r.GET("/:id", pc.ApiRetrieve)
+		r.PUT("/:id", pc.ApiUpdate)
+		r.DELETE("/:id", pc.ApiDelete)
+	}
+}
+
+func registerNoAuthApiRouter(v1 *gin.RouterGroup, pc *Controller) {
+
+}

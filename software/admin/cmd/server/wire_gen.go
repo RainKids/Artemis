@@ -100,11 +100,11 @@ func CreateApp(cf string) (*application.Application, error) {
 	if err2 != nil {
 		return nil, err
 	}
-	blogServiceClient, err2 := grpcclient.NewBlogClient(grpcClient)
+	blogClient, err2 := grpcclient.NewBlogClient(grpcClient)
 	if err2 != nil {
 		return nil, err
 	}
-	serviceService := service.NewService(zapLogger, repositoryRepository, blogServiceClient)
+	serviceService := service.NewService(zapLogger, repositoryRepository, blogClient)
 	controller := api.NewController(zapLogger, viper, redisDB, serviceService)
 	initControllers := api.CreateInitControllersFn(controller)
 	engine := http.NewRouter(httpOptions, zapLogger, initControllers, tracerProvider)
