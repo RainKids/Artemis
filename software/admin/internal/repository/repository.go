@@ -18,11 +18,13 @@ type repository struct {
 	hello    HelloRepository
 	api      ApiRepository
 	casbin   CasbinRepository
+	dept     DeptRepository
+	dict     DictRepository
+	menu     MenuRepository
+	post     PostRepository
+	role     RoleRepository
+	user     UserRepository
 	migrants []Migrant
-}
-
-func (r *repository) Init() error {
-	return r.Migrate()
 }
 
 func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.Client, mongo *mongo.MongoDB) Repository {
@@ -34,10 +36,23 @@ func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.
 		hello:  newHelloRepository(log),
 		api:    newApiRepository(log, db, rdb),
 		casbin: newCasbinRepository(log, db),
+		dept:   newDeptRepository(log, db, rdb),
+		dict:   newDictRepository(log, db, rdb),
+		menu:   newMenuRepository(log, db, rdb),
+		post:   newPostRepository(log, db, rdb),
+		role:   newRoleRepository(log, db, rdb),
+		user:   newUserRepository(log, db, rdb),
 	}
 	r.migrants = getMigrants(
 		r.Api(),
-		r.Casbin())
+		r.Casbin(),
+		r.Dept(),
+		r.Dict(),
+		r.Menu(),
+		r.Post(),
+		r.Role(),
+		r.User(),
+	)
 	err := r.Init()
 	if err != nil {
 		log.Error("DB Table Migrate Error", zap.Error(err))
@@ -110,4 +125,32 @@ func (r *repository) Api() ApiRepository {
 
 func (r *repository) Casbin() CasbinRepository {
 	return r.casbin
+}
+
+func (r *repository) Dept() DeptRepository {
+	return r.dept
+}
+
+func (r *repository) Dict() DictRepository {
+	return r.dict
+}
+
+func (r *repository) Menu() MenuRepository {
+	return r.menu
+}
+
+func (r *repository) Post() PostRepository {
+	return r.post
+}
+
+func (r *repository) Role() RoleRepository {
+	return r.role
+}
+
+func (r *repository) User() UserRepository {
+	return r.user
+}
+
+func (r *repository) Init() error {
+	return r.Migrate()
 }

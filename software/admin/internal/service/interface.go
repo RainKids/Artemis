@@ -12,6 +12,12 @@ type Service interface {
 	Blog() BlogService
 	Hello() HelloService
 	Api() ApiService
+	Dept() DeptService
+	Dict() DictService
+	Menu() MenuService
+	Post() PostService
+	Role() RoleService
+	User() UserService
 }
 
 type BlogService interface {
@@ -29,4 +35,27 @@ type ApiService interface {
 	Retrieve(context.Context, int64, *common.DataPermission) (*po.Api, error)
 	Update(context.Context, int64, *dto.ApiRequest, *common.DataPermission) error
 	Delete(context.Context, int64, *common.DataPermission) error
+}
+
+type DeptService interface {
+}
+
+type DictService interface {
+}
+
+type MenuService interface {
+}
+
+type PostService interface {
+	List(c context.Context, params *dto.PostSearchParams) (*vo.PostList, error)
+	Create(context.Context, *dto.PostRequest) (*po.Post, error)
+	Retrieve(context.Context, int64) (*po.Post, error)
+	Update(context.Context, int64, *dto.PostRequest) error
+	Delete(context.Context, int64) error
+}
+
+type RoleService interface {
+}
+
+type UserService interface {
 }

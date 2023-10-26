@@ -51,7 +51,7 @@ func SuccessResponse(ctx *gin.Context, data interface{}, opts ...Option) {
 	c := 0
 	resp := Data{
 		Code:    &c,
-		Message: "",
+		Message: "success",
 		Data:    data,
 	}
 

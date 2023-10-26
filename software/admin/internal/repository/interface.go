@@ -11,6 +11,12 @@ type Repository interface {
 	Hello() HelloRepository
 	Api() ApiRepository
 	Casbin() CasbinRepository
+	Dept() DeptRepository
+	Dict() DictRepository
+	Menu() MenuRepository
+	Post() PostRepository
+	Role() RoleRepository
+	User() UserRepository
 	Close() error
 	Ping(ctx context.Context) error
 	Init() error
@@ -36,5 +42,34 @@ type ApiRepository interface {
 
 type CasbinRepository interface {
 	UpdateCasbinApi(ctx context.Context, oldPath, newPath, oldMethod, newMethod string) error
+	Migrate() error
+}
+
+type DeptRepository interface {
+	Migrate() error
+}
+
+type DictRepository interface {
+	Migrate() error
+}
+
+type MenuRepository interface {
+	Migrate() error
+}
+
+type PostRepository interface {
+	List(context.Context, *dto.PostSearchParams) ([]*po.Post, int64, error)
+	Retrieve(context.Context, int64) (*po.Post, error)
+	Create(context.Context, *po.Post) (*po.Post, error)
+	Update(context.Context, *po.Post) error
+	Delete(context.Context, int64) error
+	Migrate() error
+}
+
+type RoleRepository interface {
+	Migrate() error
+}
+
+type UserRepository interface {
 	Migrate() error
 }

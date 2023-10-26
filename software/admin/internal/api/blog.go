@@ -15,7 +15,7 @@ func init() {
 // Blog
 // @Summary 广告列表
 // @Description   广告列表接口
-// @Tag Blog
+// @Tags Blog
 // @Accept  application/json
 // @Produce  application/json
 // @Success 200 {object} response.Data{}
@@ -38,7 +38,7 @@ func (c *Controller) AdvertList(ctx *gin.Context) {
 // Blog
 // @Summary 广告列表
 // @Description   广告列表接口
-// @Tag Blog
+// @Tags Blog
 // @Accept  application/json
 // @Produce  application/json
 // @Success 200 {object} response.Data{}

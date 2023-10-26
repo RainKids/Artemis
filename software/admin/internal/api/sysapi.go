@@ -13,6 +13,14 @@ func init() {
 	routerNoAuth = append(routerNoAuth, registerNoAuthApiRouter)
 }
 
+// @Tags SysApi
+// @Summary api列表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body dto.ApiSearchParams true "api路径, api中文描述, api组, 方法"
+// @Success 200 {object} response.Data{data=vo.ApiList} "{"code": 200, "data": [...], "message"=""}"
+// @Router /api/v1/system/api [get]
 func (c *Controller) ApiList(ctx *gin.Context) {
 	apiSearchParams := &dto.ApiSearchParams{}
 	err := ctx.ShouldBindQuery(&apiSearchParams)
@@ -28,6 +36,14 @@ func (c *Controller) ApiList(ctx *gin.Context) {
 	response.SuccessResponse(ctx, resp)
 }
 
+// @Tags SysApi
+// @Summary 创建基础api
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body dto.ApiRequest true "api路径, api中文描述, api组, 方法"
+// @Success 200 {object} response.Data{}
+// @Router /api/v1/system/api [post]
 func (c *Controller) ApiCreate(ctx *gin.Context) {
 	apiRequest := new(dto.ApiRequest)
 	err := apiRequest.BindValidParam(ctx)
@@ -42,6 +58,14 @@ func (c *Controller) ApiCreate(ctx *gin.Context) {
 	response.SuccessResponse(ctx, resp)
 }
 
+// @Tags SysApi
+// @Summary api	详情
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body dto.IDUriRequest true "ID"
+// @Success 200 {object} response.Data{}
+// @Router /api/v1/system/api/{id} [get]
 func (c *Controller) ApiRetrieve(ctx *gin.Context) {
 	var apiUri dto.IDUriRequest
 	err := ctx.ShouldBindUri(&apiUri)
@@ -57,6 +81,14 @@ func (c *Controller) ApiRetrieve(ctx *gin.Context) {
 	response.SuccessResponse(ctx, resp)
 }
 
+// @Tags SysApi
+// @Summary 更新api
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body dto.ApiRequest true "api路径, api中文描述, api组, 方法"
+// @Success 200 {object} response.Data '{code:200,data={},message=""}'
+// @Router /api/v1/system/api/{id} [put]
 func (c *Controller) ApiUpdate(ctx *gin.Context) {
 	var apiUri dto.IDUriRequest
 	err := ctx.ShouldBindUri(&apiUri)
@@ -77,6 +109,14 @@ func (c *Controller) ApiUpdate(ctx *gin.Context) {
 	response.SuccessResponse(ctx, nil)
 }
 
+// @Tags SysApi
+// @Summary 删除api
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body dto.IDUriRequest true "ID"
+// @Success 200 {object} response.Data{Code,Message,Data}
+// @Router /api/v1/system/api/{id} [delete]
 func (c *Controller) ApiDelete(ctx *gin.Context) {
 	var apiUri dto.IDUriRequest
 	err := ctx.ShouldBindUri(&apiUri)

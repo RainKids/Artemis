@@ -48,10 +48,23 @@ func (a *apiRepository) List(c context.Context, params *dto.ApiSearchParams,
 		db = db.Where("api_group = ?", params.ApiGroup)
 	}
 	orderby := ""
-	if params.OrderKey == "" {
-		orderby = "api_group"
+	if params.OrderKey != "" {
+		// 设置有效排序key 防止sql注入
+		orderMap := make(map[string]bool, 5)
+		orderMap["id"] = true
+		orderMap["path"] = true
+		orderMap["api_group"] = true
+		orderMap["description"] = true
+		orderMap["method"] = true
+		if orderMap[params.OrderKey] {
+			if params.Desc {
+				orderby = params.OrderKey + " desc"
+			} else {
+				orderby = params.OrderKey
+			}
+		}
 	} else {
-		orderby = params.OrderKey + " desc"
+		orderby = "id"
 	}
 	err := db.Scopes(database.Paginate(params.Page, params.PageSize), common.Permission(po.Api{}.TableName(), p)).Order(orderby).
 		Find(&apis).Count(&count).Error
