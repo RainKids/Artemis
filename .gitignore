@@ -23,3 +23,5 @@ vendor/
 # 忽略debug文件
 __debug_bin
 main
+*tmp
+*go.sum

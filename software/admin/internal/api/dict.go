@@ -17,3 +17,7 @@ func registerAuthDictRouter(v1 *gin.RouterGroup, pc *Controller) {
 func registerNoAuthDictRouter(v1 *gin.RouterGroup, pc *Controller) {
 
 }
+
+//func (c *Controller) DictDataList
+//
+//func (c *Controller) DeptList

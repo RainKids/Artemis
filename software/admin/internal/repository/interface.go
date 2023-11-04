@@ -3,6 +3,7 @@ package repository
 import (
 	"admin/internal/biz/dto"
 	"admin/internal/biz/po"
+	"admin/internal/biz/vo"
 	"admin/internal/common"
 	"context"
 )
@@ -46,10 +47,26 @@ type CasbinRepository interface {
 }
 
 type DeptRepository interface {
+	SetDeptPage(context.Context, *dto.DeptSearchParams) ([]po.Dept, error)
+	SetDeptTree(context.Context, *dto.DeptSearchParams) ([]vo.DeptLabel, error)
+	Retrieve(context.Context, int64) (*po.Dept, error)
+	Create(context.Context, *po.Dept) (*po.Dept, error)
+	Update(context.Context, *po.Dept) error
+	Delete(context.Context, int64) error
 	Migrate() error
 }
 
 type DictRepository interface {
+	DataList(context.Context, *dto.DictDataSearchParams) ([]*po.DictData, int64, error)
+	DataRetrieve(context.Context, int64) (*po.DictData, error)
+	DataCreate(context.Context, *po.DictData) (*po.DictData, error)
+	DataUpdate(context.Context, *po.DictData) error
+	DataDelete(context.Context, int64) error
+	TypeList(context.Context, *dto.DictTypeSearchParams) ([]*po.DictType, int64, error)
+	TypeRetrieve(context.Context, int64) (*po.DictType, error)
+	TypeCreate(context.Context, *po.DictType) (*po.DictType, error)
+	TypeUpdate(context.Context, *po.DictType) error
+	TypeDelete(context.Context, int64) error
 	Migrate() error
 }
 
@@ -67,6 +84,8 @@ type PostRepository interface {
 }
 
 type RoleRepository interface {
+	Create(context.Context, *po.Role) (*po.Role, error)
+	Delete(context.Context, int64) error
 	Migrate() error
 }
 

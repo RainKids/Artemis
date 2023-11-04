@@ -15,7 +15,7 @@ func init() {
 
 // @Tags SysApi
 // @Summary api列表
-// @Security ApiKeyAuth
+// @Security Bearer
 // @accept application/json
 // @Produce application/json
 // @Param data body dto.ApiSearchParams true "api路径, api中文描述, api组, 方法"
@@ -34,11 +34,12 @@ func (c *Controller) ApiList(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, resp)
+	return
 }
 
 // @Tags SysApi
 // @Summary 创建基础api
-// @Security ApiKeyAuth
+// @Security Bearer
 // @accept application/json
 // @Produce application/json
 // @Param data body dto.ApiRequest true "api路径, api中文描述, api组, 方法"
@@ -56,11 +57,12 @@ func (c *Controller) ApiCreate(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, resp)
+	return
 }
 
 // @Tags SysApi
 // @Summary api	详情
-// @Security ApiKeyAuth
+// @Security Bearer
 // @accept application/json
 // @Produce application/json
 // @Param data body dto.IDUriRequest true "ID"
@@ -79,11 +81,12 @@ func (c *Controller) ApiRetrieve(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, resp)
+	return
 }
 
 // @Tags SysApi
 // @Summary 更新api
-// @Security ApiKeyAuth
+// @Security Bearer
 // @accept application/json
 // @Produce application/json
 // @Param data body dto.ApiRequest true "api路径, api中文描述, api组, 方法"
@@ -107,11 +110,12 @@ func (c *Controller) ApiUpdate(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, nil)
+	return
 }
 
 // @Tags SysApi
 // @Summary 删除api
-// @Security ApiKeyAuth
+// @Security Bearer
 // @accept application/json
 // @Produce application/json
 // @Param data body dto.IDUriRequest true "ID"
@@ -130,6 +134,7 @@ func (c *Controller) ApiDelete(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, nil)
+	return
 }
 
 func registerAuthApiRouter(v1 *gin.RouterGroup, pc *Controller) {

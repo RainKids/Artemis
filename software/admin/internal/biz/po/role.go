@@ -12,8 +12,10 @@ type Role struct {
 	Remark    string  `json:"remark" gorm:"size:255;"`                //备注
 	Admin     bool    `json:"admin" gorm:"size:4;"`
 	DataScope string  `json:"dataScope" gorm:"size:128;"`
+	MenuIds   []int64 `json:"menuIds" gorm:"-"`
+	DeptIds   []int   `json:"deptIds" gorm:"-"`
 	Dept      []Dept  `json:"Dept" gorm:"many2many:sys_role_dept;"`
-	Menu      []*Menu `json:"Menu" gorm:"many2many:sys_role_menu;"`
+	Menu      *[]Menu `json:"Menu" gorm:"many2many:sys_role_menu;"`
 	global.OperateBy
 	global.ModelTime
 }

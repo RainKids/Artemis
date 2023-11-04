@@ -4,7 +4,7 @@ import "admin/global"
 
 type Menu struct {
 	ID          int64        `json:"id" gorm:"primaryKey;autoIncrement"` // 主键ID
-	MenuName    string       `json:"name" gorm:"type:varchar(128);"`
+	Name        string       `json:"name" gorm:"type:varchar(128);"`
 	Title       string       `json:"title" gorm:"type:varchar(64);"`
 	Icon        string       `json:"icon" gorm:"type:varchar(128);"`
 	Path        string       `json:"path" gorm:"type:varchar(128);"`
@@ -26,7 +26,7 @@ type Menu struct {
 	Sort        int          `json:"sort" gorm:"size:4;"`
 	Visible     string       `json:"visible" gorm:"size:1;"`
 	IsFrame     string       `json:"isFrame" gorm:"size:1;DEFAULT:0;"`
-	SysApi      []Api        `json:"sysApi" gorm:"many2many:sys_menu_api_rule"`
+	Api         []Api        `json:"Api" gorm:"many2many:sys_menu_api_rule"`
 	Apis        []int64      `json:"apis" gorm:"-"`
 	DataScope   string       `json:"dataScope" gorm:"-"`
 	Params      string       `json:"params" gorm:"-"`
@@ -39,11 +39,11 @@ type Menu struct {
 	global.ModelTime
 }
 
-type SysMenuSlice []Menu
+type MenuSlice []Menu
 
-func (x SysMenuSlice) Len() int           { return len(x) }
-func (x SysMenuSlice) Less(i, j int) bool { return x[i].Sort < x[j].Sort }
-func (x SysMenuSlice) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
+func (x MenuSlice) Len() int           { return len(x) }
+func (x MenuSlice) Less(i, j int) bool { return x[i].Sort < x[j].Sort }
+func (x MenuSlice) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
 
 func (*Menu) TableName() string {
 	return "sys_menu"

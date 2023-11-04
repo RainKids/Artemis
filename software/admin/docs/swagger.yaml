@@ -50,6 +50,49 @@ definitions:
       title:
         type: string
     type: object
+  dto.DeptRequest:
+    properties:
+      createdBy:
+        type: integer
+      email:
+        description: 邮箱
+        type: string
+      leader:
+        description: 负责人
+        type: string
+      name:
+        description: 部门名称
+        type: string
+      parentId:
+        description: 上级部门
+        type: integer
+      phone:
+        description: 手机
+        type: string
+      sort:
+        description: 部门排序
+        type: integer
+      status:
+        description: 状态
+        type: integer
+    required:
+    - createdBy
+    - leader
+    - name
+    - sort
+    - status
+    type: object
+  dto.DeptSearchParams:
+    properties:
+      name:
+        type: string
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      status:
+        type: integer
+    type: object
   dto.IDUriRequest:
     properties:
       id:
@@ -262,7 +305,7 @@ paths:
                   $ref: '#/definitions/vo.ApiList'
               type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: api列表
       tags:
       - SysApi
@@ -284,7 +327,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Data'
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 创建基础api
       tags:
       - SysApi
@@ -307,7 +350,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Data'
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 删除api
       tags:
       - SysApi
@@ -329,7 +372,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Data'
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: "api\t详情"
       tags:
       - SysApi
@@ -351,10 +394,144 @@ paths:
           schema:
             $ref: '#/definitions/response.Data'
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 更新api
       tags:
       - SysApi
+  /api/v1/system/dept:
+    delete:
+      description: 删除数据
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Data'
+      security:
+      - Bearer: []
+      summary: 删除部门
+      tags:
+      - SysDept
+    get:
+      consumes:
+      - application/json
+      description: 部门列表
+      parameters:
+      - description: 名称, 状态
+        in: body
+        name: ddata
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeptSearchParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Data'
+      security:
+      - Bearer: []
+      summary: 部门列表数据
+      tags:
+      - SysDept
+    post:
+      consumes:
+      - application/json
+      description: 获取JSON
+      parameters:
+      - description: ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.IDUriRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Data'
+      summary: 添加部门
+      tags:
+      - SysDept
+  /api/v1/system/dept/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.IDUriRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Data'
+      security:
+      - Bearer: []
+      summary: 部门详情
+      tags:
+      - SysDept
+    put:
+      consumes:
+      - application/json
+      description: 获取JSON
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeptRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Data'
+      security:
+      - Bearer: []
+      summary: 修改部门
+      tags:
+      - SysDept
+  /api/v1/system/dept/tree:
+    get:
+      consumes:
+      - application/json
+      description: 部门所有数据树
+      parameters:
+      - description: 名称, 状态
+        in: body
+        name: ddata
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeptSearchParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Data'
+      security:
+      - Bearer: []
+      summary: 部门所有数据树
+      tags:
+      - SysDept
   /api/v1/system/post:
     get:
       consumes:

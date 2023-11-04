@@ -7,6 +7,7 @@ import (
 	"admin/pkg/database/postgres"
 	"admin/pkg/database/redis"
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -27,6 +28,7 @@ func newPostRepository(logger *zap.Logger, db *postgres.DB, rdb *redis.RedisDB) 
 }
 
 func (p *postRepository) Migrate() error {
+	fmt.Println(333333)
 	return p.db.AutoMigrate(&po.Post{})
 }
 

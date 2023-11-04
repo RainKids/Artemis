@@ -16,7 +16,7 @@ func init() {
 func registerAuthPostRouter(v1 *gin.RouterGroup, pc *Controller) {
 	r := v1.Group("/system/post")
 	{
-		r.GET("", pc.ApiList)
+		r.GET("", pc.PostList)
 		r.POST("", pc.PostCreate)
 		r.GET("/:id", pc.PostRetrieve)
 		r.PUT("/:id", pc.PostUpdate)
@@ -48,6 +48,7 @@ func (c *Controller) PostList(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, resp)
+	return
 }
 
 // @Tags SysPost
@@ -70,6 +71,7 @@ func (c *Controller) PostCreate(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, resp)
+	return
 }
 
 // @Tags SysPost
@@ -93,6 +95,7 @@ func (c *Controller) PostRetrieve(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, resp)
+	return
 }
 
 // @Tags SysPost
@@ -120,6 +123,7 @@ func (c *Controller) PostUpdate(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, nil)
+	return
 }
 
 // @Tags SysPost
@@ -142,4 +146,5 @@ func (c *Controller) PostDelete(ctx *gin.Context) {
 		return
 	}
 	response.SuccessResponse(ctx, nil)
+	return
 }
