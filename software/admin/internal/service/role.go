@@ -17,10 +17,11 @@ type roleService struct {
 	enforcer       *casbin.SyncedEnforcer
 }
 
-func newRoleService(logger *zap.Logger, roleRepository repository.RoleRepository) RoleService {
+func newRoleService(logger *zap.Logger, roleRepository repository.RoleRepository, enforcer *casbin.SyncedEnforcer) RoleService {
 	return &roleService{
 		logger:         logger.With(zap.String("type", "RoleService")),
 		roleRepository: roleRepository,
+		enforcer:       enforcer,
 	}
 }
 

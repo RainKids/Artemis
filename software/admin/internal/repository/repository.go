@@ -6,6 +6,7 @@ import (
 	"admin/pkg/database/postgres"
 	"admin/pkg/database/redis"
 	"context"
+	"github.com/casbin/casbin/v2"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -27,7 +28,7 @@ type repository struct {
 	migrants []Migrant
 }
 
-func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.Client, mongo *mongo.MongoDB) Repository {
+func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.Client, mongo *mongo.MongoDB, enforcer *casbin.SyncedEnforcer) Repository {
 	r := &repository{
 		db:     db.Postgres,
 		rdb:    rdb,
@@ -40,7 +41,7 @@ func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.
 		dict:   newDictRepository(log, db, rdb),
 		menu:   newMenuRepository(log, db, rdb),
 		post:   newPostRepository(log, db, rdb),
-		role:   newRoleRepository(log, db, rdb),
+		role:   newRoleRepository(log, db, rdb, enforcer),
 		user:   newUserRepository(log, db, rdb),
 	}
 	r.migrants = getMigrants(

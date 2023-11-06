@@ -3,6 +3,7 @@ package service
 import (
 	"admin/internal/grpcclient"
 	"admin/internal/repository"
+	"github.com/casbin/casbin/v2"
 	"go.uber.org/zap"
 )
 
@@ -18,7 +19,7 @@ type service struct {
 	user  UserService
 }
 
-func NewService(log *zap.Logger, repository repository.Repository, blogPpcSvc *grpcclient.BlogClient) Service {
+func NewService(log *zap.Logger, repository repository.Repository, blogPpcSvc *grpcclient.BlogClient, enforcer *casbin.SyncedEnforcer) Service {
 	r := &service{
 		blog:  newBlogService(log, blogPpcSvc),
 		hello: newHelloService(log, repository.Hello()),
@@ -27,7 +28,7 @@ func NewService(log *zap.Logger, repository repository.Repository, blogPpcSvc *g
 		dict:  newDictService(log, repository.Dict()),
 		menu:  newMenuService(log, repository.Menu()),
 		post:  newPostService(log, repository.Post()),
-		role:  newRoleService(log, repository.Role()),
+		role:  newRoleService(log, repository.Role(), enforcer),
 		user:  newUserService(log, repository.User()),
 	}
 	return r
