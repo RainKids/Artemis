@@ -12,12 +12,15 @@ import (
 var MySecret = []byte(global.MySignedKey)
 
 type MyClaims struct {
-	Username string `json:"username"`
-	UserId   int    `json:"userId"`
+	Username   string `json:"username"`
+	UserId     int64  `json:"userId"`
+	SuperAdmin bool   `json:"superAdmin"`
+	RoleId     int64  `json:"roleId"`
+	DataScope  string `json:"dataScope"`
 	jwt.RegisteredClaims
 }
 
-func CreateToken(username string, userId int) (string, time.Time, error) {
+func CreateToken(username string, userId int64) (string, time.Time, error) {
 	expiresTime := time.Now().Add(7 * 24 * time.Hour)
 	claims := &MyClaims{
 		Username:         username,

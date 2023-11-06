@@ -38,9 +38,25 @@ type ApiService interface {
 }
 
 type DeptService interface {
+	SetDeptPage(context.Context, *dto.DeptSearchParams) (*vo.DeptList, error)
+	SetDeptTree(context.Context, *dto.DeptSearchParams) (*vo.DeptLabelList, error)
+	Retrieve(context.Context, int64) (*po.Dept, error)
+	Create(context.Context, *dto.DeptRequest) (*po.Dept, error)
+	Update(context.Context, int64, *dto.DeptRequest) error
+	Delete(context.Context, int64) error
 }
 
 type DictService interface {
+	DataList(context.Context, *dto.DictDataSearchParams) (*vo.DictDataList, error)
+	DataRetrieve(context.Context, int64) (*po.DictData, error)
+	DataCreate(context.Context, *dto.DictDataRequest) (*po.DictData, error)
+	DataUpdate(context.Context, int64, *dto.DictDataRequest) error
+	DataDelete(context.Context, int64) error
+	TypeList(context.Context, *dto.DictTypeSearchParams) (*vo.DictTypeList, error)
+	TypeRetrieve(context.Context, int64) (*po.DictType, error)
+	TypeCreate(context.Context, *dto.DictTypeRequest) (*po.DictType, error)
+	TypeUpdate(context.Context, int64, *dto.DictTypeRequest) error
+	TypeDelete(context.Context, int64) error
 }
 
 type MenuService interface {
@@ -55,6 +71,8 @@ type PostService interface {
 }
 
 type RoleService interface {
+	Create(c context.Context, req dto.RoleRequest) (*po.Role, error)
+	Delete(context.Context, int64) error
 }
 
 type UserService interface {

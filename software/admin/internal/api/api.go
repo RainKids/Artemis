@@ -3,6 +3,8 @@ package api
 import (
 	"admin/internal/service"
 	"admin/pkg/database/redis"
+	"admin/pkg/transport/http/middleware/auth"
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -14,10 +16,11 @@ var (
 )
 
 type Controller struct {
-	v       *viper.Viper
-	logger  *zap.Logger
-	rdb     *redis.RedisDB
-	service service.Service
+	v        *viper.Viper
+	logger   *zap.Logger
+	enforcer *casbin.SyncedEnforcer
+	rdb      *redis.RedisDB
+	service  service.Service
 }
 
 func NewController(logger *zap.Logger, v *viper.Viper, rdb *redis.RedisDB, service service.Service) *Controller {
@@ -44,6 +47,7 @@ func InitRouter(r *gin.Engine, pc *Controller) *gin.Engine {
 func NoAuthRouter(r *gin.Engine, pc *Controller) {
 	// 可根据业务需求来设置接口版本
 	v1 := r.Group("/api/v1")
+	v1.Use(auth.AuthenticateToken(), auth.AuthCheckRole(pc.logger, pc.enforcer))
 	for _, f := range routerNoAuth {
 		f(v1, pc)
 	}

@@ -15,15 +15,15 @@ type RoleSearchParams struct {
 type RoleRequest struct {
 	Name      string    `form:"name" comment:"角色名称" validate:"required"` // 角色名称
 	Status    string    `form:"status" comment:"状态" validate:"required"` // 状态
-	key       string    `form:"key" comment:"角色代码" validate:"required"`  // 角色代码
+	Key       string    `form:"key" comment:"角色代码" validate:"required"`  // 角色代码
 	Sort      int       `form:"sort" comment:"角色排序"`                     // 角色排序
 	Flag      string    `form:"flag" comment:"标记"`                       // 标记
 	Remark    string    `form:"remark" comment:"备注"`                     // 备注
 	Admin     bool      `form:"admin" comment:"是否管理员"`
 	DataScope string    `form:"dataScope"`
-	SysMenu   []po.Menu `form:"menu"`
+	Menu      []po.Menu `form:"menu"`
 	MenuIds   []int     `form:"menuIds"`
-	SysDept   []po.Dept `form:"dept"`
+	Dept      []po.Dept `form:"dept"`
 	DeptIds   []int     `form:"deptIds"`
 	OperateBy int64     `json:"createdBy" validate:"required"`
 }
