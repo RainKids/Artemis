@@ -242,13 +242,13 @@ func (c *Client) ScrollQuery(ctx context.Context, index []string, typeStr string
 }
 
 // Query 搜索
-func (c *Client) SimpleQuery(index, queryString string) *elastic.SearchResult {
+func (c *Client) SimpleQuery(index, queryString string, ctx context.Context) *elastic.SearchResult {
 	var (
 		res *elastic.SearchResult
 		err error
 	)
 	//取所有
-	res, err = EsConn.Client.Search(index).Do(context.Background())
+	res, err = EsConn.Client.Search(index).Do(ctx)
 	if len(queryString) > 0 {
 		//字段相等
 		q := elastic.NewQueryStringQuery(queryString)

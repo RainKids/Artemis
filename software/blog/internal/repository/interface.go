@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"blog/internal/biz/dto"
 	"blog/internal/biz/po"
 	"blog/internal/biz/vo"
 	"context"
@@ -9,6 +10,8 @@ import (
 type Repository interface {
 	Advert() AdvertRepository
 	Banner() BannerRepository
+	Article() ArticleRepository
+	Comment() CommentRepository
 	Close() error
 	Ping(ctx context.Context) error
 	Init() error
@@ -32,6 +35,15 @@ type BannerRepository interface {
 	SysList(c context.Context, page, pageSize int) ([]*po.Banner, int64, error)
 	SysUpdate(context.Context, *po.Banner) (*po.Banner, error)
 	SysDelete(context.Context, int64) error
+	Migrate() error
+}
+
+type ArticleRepository interface {
+	Search(search *dto.ArticleSearchParams) (*vo.ArticleSearchList, error)
+	Migrate() error
+}
+
+type CommentRepository interface {
 	Migrate() error
 }
 

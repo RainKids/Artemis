@@ -17,6 +17,8 @@ type repository struct {
 	mongo    *mongo.MongoDB
 	advert   AdvertRepository
 	banner   BannerRepository
+	article  ArticleRepository
+	comment  CommentRepository
 	migrants []Migrant
 }
 
@@ -26,16 +28,20 @@ func (r *repository) Init() error {
 
 func NewRepository(log *zap.Logger, db *postgres.DB, rdb *redis.RedisDB, es *es.Client, mongo *mongo.MongoDB) Repository {
 	r := &repository{
-		db:     db.Postgres,
-		rdb:    rdb,
-		es:     es,
-		mongo:  mongo,
-		advert: newAdvertRepository(log, db, rdb),
-		banner: newBannerRepository(log, db, rdb),
+		db:      db.Postgres,
+		rdb:     rdb,
+		es:      es,
+		mongo:   mongo,
+		advert:  newAdvertRepository(log, db, rdb),
+		banner:  newBannerRepository(log, db, rdb),
+		article: newArticleRepository(log, db, rdb, es),
+		comment: newCommentRepository(log, rdb, mongo),
 	}
 	r.migrants = getMigrants(
 		r.advert,
 		r.banner,
+		r.article,
+		r.comment,
 	)
 	err := r.Init()
 	if err != nil {
@@ -105,4 +111,12 @@ func (r *repository) Advert() AdvertRepository {
 
 func (r *repository) Banner() BannerRepository {
 	return r.banner
+}
+
+func (r *repository) Article() ArticleRepository {
+	return r.article
+}
+
+func (r *repository) Comment() CommentRepository {
+	return r.comment
 }

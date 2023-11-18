@@ -32,14 +32,24 @@ func (Article) Mapping() string {
 	return `
 {
   "settings": {
-    "index":{
-      "max_result_window": "100000"
+    "analysis": {
+      "analyzer": {
+        "text_analyzer": {
+          "tokenizer": "ik_max_word"
+        }
+      }
     }
-  }, 
+  },
   "mappings": {
     "properties": {
+ 	"all": {
+        "type": "text",
+        "analyzer": "text_analyzer"
+      },
       "title": { 
-        "type": "text"
+        "type": "text",
+ 		"analyzer": "text_analyzer",
+		"copy_to": "all"
       },
       "keyword": { 
         "type": "keyword"
@@ -51,7 +61,9 @@ func (Article) Mapping() string {
         "type": "text"
       },
       "content": { 
-        "type": "text"
+        "type": "text",
+		"analyzer": "text_analyzer",
+		"copy_to": "all"
       },
       "look_count": {
         "type": "integer"

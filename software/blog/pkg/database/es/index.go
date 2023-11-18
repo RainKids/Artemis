@@ -1,6 +1,8 @@
 package es
 
-import "context"
+import (
+	"context"
+)
 
 // 检查索引是否存在
 func (c *Client) IndexExists(ctx context.Context, indexName string, forceCheck bool) (bool, error) {
@@ -45,4 +47,15 @@ func (c *Client) CreateIndex(ctx context.Context, indexName string, bodyJson int
 func (c *Client) Insert(ctx context.Context, indexName string, bodyJson interface{}) error {
 	_, err := c.Client.Index().Index(indexName).BodyJson(bodyJson).Refresh("true").Do(ctx)
 	return err
+}
+
+func (c *Client) RemoveIndex(ctx context.Context, indexName string) error {
+	indexDelete, err := c.Client.DeleteIndex(indexName).Do(ctx)
+	if err != nil {
+		return err
+	}
+	if !indexDelete.Acknowledged {
+		return err
+	}
+	return nil
 }
