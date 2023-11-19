@@ -1,6 +1,7 @@
 package crontab
 
 import (
+	"blog/internal/biz/po"
 	"blog/pkg/database/es"
 	"blog/pkg/database/mongo"
 	"blog/pkg/database/postgres"
@@ -10,7 +11,9 @@ import (
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/gochore/dcron"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.uber.org/zap"
+	"strings"
 	"time"
 )
 
@@ -71,12 +74,42 @@ func (s *DefaultCronJobService) RedisToES(c context.Context) error {
 
 // RedisToMongo 同步redis数据到Mongo中 数据持久化
 func (s *DefaultCronJobService) RedisToMongo(c context.Context) error {
-	//TODO implement me 评论点赞数
-	if task, ok := dcron.TaskFromContext(c); ok {
-		fmt.Println("run:", task.Job.Spec(), task.Key)
+	//TODO implement me 文章评论数信息同步
+	if _, ok := dcron.TaskFromContext(c); ok {
+		keys, err := s.rdb.Client.Keys(c, "blog:article:comment:*").Result()
+		if err != nil {
+			return err
+		}
+		for i := 0; i < len(keys); i++ {
+			keyArray := strings.Split(keys[i], ":")
+			commentID := keyArray[len(keyArray)-1]
+			col := s.mongo.DB.Collection(po.Comment{}.TableName())
+			var comment po.Comment
+			err := col.FindOne(context.TODO(), bson.D{{"_id", commentID}}).Decode(&comment)
+			if err != nil {
+				return err
+			}
+			likeCount, err := s.rdb.HGet(c, keys[i], "like").Int64()
+			if err != nil {
+				s.rdb.HSet(c, keys[i], "like", comment.Like)
+			}
+			hateCount, err := s.rdb.HGet(c, keys[i], "hate").Int64()
+			if err != nil {
+				s.rdb.HSet(c, keys[i], "hate", comment.Hate)
+			}
+			floorCount, err := s.rdb.HGet(c, keys[i], "floor").Int64()
+			if err != nil {
+				s.rdb.HSet(c, keys[i], "floor", comment.Floor)
+			}
+			commentCount, err := s.rdb.HGet(c, keys[i], "count").Int64()
+			if err != nil {
+				s.rdb.HSet(c, keys[i], "comment", comment.Count)
+			}
+			_, err = col.UpdateOne(c, bson.M{"_id": commentID}, bson.D{{"like", likeCount},
+				{"hate", hateCount}, {"floor", floorCount}, {"count", commentCount}})
+			s.logger.Error("update comment error", zap.Error(err))
+		}
 	}
-	fmt.Println(1111)
-
 	return nil
 }
 

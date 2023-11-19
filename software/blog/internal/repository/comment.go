@@ -60,11 +60,11 @@ func (t *commentRepository) Create(c context.Context, comment *po.Comment) (*vo.
 	}
 	return &vo.ArticleReplyComment{
 		ID: insertOneResult.InsertedID.(string),
-		User: vo.CommentUser{
+		User: &vo.CommentUser{
 			ID:       user.ObjID,
 			Username: user.Username,
 		},
-		Reply: vo.CommentUser{
+		Reply: &vo.CommentUser{
 			ID:       reply.ObjID,
 			Username: reply.Username,
 		},
@@ -143,26 +143,26 @@ func (t *commentRepository) ListByArticleID(c context.Context, articleId, offset
 			return nil, count, errors.Errorf("reply comment to struct err: %s", err)
 		}
 		if len(comment.Users) > 0 {
-			comment.User = vo.CommentUser{
+			comment.User = &vo.CommentUser{
 				ID:       comment.Users[0].ObjID,
 				Username: comment.Users[0].Username,
 			}
 		}
 		if len(comment.Replies) > 0 {
-			comment.Reply = vo.CommentUser{
+			comment.Reply = &vo.CommentUser{
 				ID:       comment.Replies[0].ObjID,
 				Username: comment.Replies[0].Username,
 			}
 		}
 		for _, child := range comments {
 			if len(child.Users) > 0 {
-				child.User = vo.CommentUser{
+				child.User = &vo.CommentUser{
 					ID:       child.Users[0].ObjID,
 					Username: child.Users[0].Username,
 				}
 			}
 			if len(child.Replies) > 0 {
-				child.Reply = vo.CommentUser{
+				child.Reply = &vo.CommentUser{
 					ID:       child.Replies[0].ObjID,
 					Username: child.Replies[0].Username,
 				}
@@ -208,17 +208,53 @@ func (t *commentRepository) ListByParentID(c context.Context, ParentID primitive
 	}
 	for _, comment := range reply {
 		if len(comment.Users) > 0 {
-			comment.User = vo.CommentUser{
+			comment.User = &vo.CommentUser{
 				ID:       comment.Users[0].ObjID,
 				Username: comment.Users[0].Username,
 			}
 		}
 		if len(comment.Replies) > 0 {
-			comment.Reply = vo.CommentUser{
+			comment.Reply = &vo.CommentUser{
 				ID:       comment.Replies[0].ObjID,
 				Username: comment.Replies[0].Username,
 			}
 		}
 	}
 	return reply, count, nil
+}
+
+func (t *commentRepository) Retrieve(c context.Context, id primitive.ObjectID) (*vo.ArticleReplyComment, error) {
+	col := t.mongo.DB.Collection(po.Comment{}.TableName())
+	var comment po.Comment
+	err := col.FindOne(c, bson.D{{"_id", id}}).Decode(&comment)
+	if err != nil {
+		return nil, err
+	}
+	user, err := t.getUserByID(comment.User)
+	if err != nil {
+		return nil, err
+	}
+	reply, err := t.getUserByID(comment.Reply)
+	if err != nil {
+		return nil, err
+	}
+	return &vo.ArticleReplyComment{
+		ID: comment.ID.Hex(),
+		User: &vo.CommentUser{
+			ID:       user.ObjID,
+			Username: user.Username,
+		},
+		Reply: &vo.CommentUser{
+			ID:       reply.ObjID,
+			Username: reply.Username,
+		},
+		Ip:        comment.Ip,
+		Message:   comment.Message,
+		CreatedAt: comment.CreatedAt,
+	}, nil
+}
+
+func (t *commentRepository) Delete(c context.Context, id primitive.ObjectID) error {
+	_, err := t.mongo.DB.Collection(po.Comment{}.TableName()).DeleteOne(c, bson.D{{"objId", id}})
+	return err
 }

@@ -19,8 +19,8 @@ type ArticleComment struct {
 	ID        string                `bson:"_id" json:"id"` // 主键ID
 	Users     []po.CommentUser      `json:"users,omitempty"`
 	Replies   []po.CommentUser      `json:"replies,omitempty"`
-	User      CommentUser           `json:"user"`
-	Reply     CommentUser           `json:"reply"`
+	User      *CommentUser          `json:"user"`
+	Reply     *CommentUser          `json:"reply"`
 	Ip        string                `json:"ip"`         // 评论Ip
 	Message   string                `json:"content"`    // 评论内容
 	CreatedAt time.Time             `json:"createdAt" ` // 创建时间
@@ -31,8 +31,8 @@ type ArticleReplyComment struct {
 	ID        string           `bson:"_id" json:"id"` // 主键ID
 	Users     []po.CommentUser `json:"users,omitempty"`
 	Replies   []po.CommentUser `json:"replies,omitempty"`
-	User      CommentUser      `json:"user"`
-	Reply     CommentUser      `json:"reply"`
+	User      *CommentUser     `json:"user"`
+	Reply     *CommentUser     `json:"reply"`
 	Ip        string           `json:"ip"`         // 评论Ip
 	Message   string           `json:"content"`    // 评论内容
 	CreatedAt time.Time        `json:"createdAt" ` // 创建时间
